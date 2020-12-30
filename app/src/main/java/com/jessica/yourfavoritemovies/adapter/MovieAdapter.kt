@@ -54,7 +54,7 @@ class MovieAdapter(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title = itemView.findViewById<TextView>(R.id.tv_title)
         private val image = itemView.findViewById<ImageView>(R.id.iv_movie)
-        val favorite = itemView.findViewById<ImageView>(R.id.iv_favorite)
+        val favorite: ImageView = itemView.findViewById<ImageView>(R.id.iv_favorite)
 
         fun onBind(result: Result) {
             title.text = result.title

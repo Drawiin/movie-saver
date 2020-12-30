@@ -4,14 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.google.android.material.snackbar.Snackbar
+import com.jessica.yourfavoritemovies.MovieUtil
 import com.jessica.yourfavoritemovies.R
 import com.jessica.yourfavoritemovies.authentication.viewmodel.AuthenticationViewModel
+import com.jessica.yourfavoritemovies.databinding.ActivityRegisterBinding
 import com.jessica.yourfavoritemovies.home.view.HomeActivity
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityRegisterBinding
+
     private val viewModel: AuthenticationViewModel by lazy {
         ViewModelProvider(this).get(
             AuthenticationViewModel::class.java
@@ -20,18 +26,47 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_register)
+        setupUi()
+        subscribeUi()
+    }
 
-        btn_register.setOnClickListener {
-            val name = etv_email_register.text.toString()
-            val email = etv_email_register.text.toString()
-            val password = etv_password_register.text.toString()
+    private fun setupUi() {
+        binding.run {
+            btnRegister.setOnClickListener {
+                val name = etvNameRegister.text.toString()
+                val email = etvEmailRegister.text.toString()
+                val password = etvPasswordRegister.text.toString()
 
-            //TODO - Implementar a verificação do nome, email e senha e realizar o registro
+                when {
+                    MovieUtil.validateNameEmailPassword(name, email, password) -> {
+                        viewModel.registerUser(email, password)
+                    }
+                }
+            }
         }
     }
 
-    //TODO - Implementar os observers do viewmodel
+    private fun subscribeUi() {
+        viewModel.stateRegister.observe(this) { state ->
+            state?.let {
+                navigateToHome(it)
+            }
+        }
+
+        viewModel.loading.observe(this) { loading ->
+            loading?.let {
+                showLoading(loading)
+            }
+        }
+
+        viewModel.error.observe(this) { error ->
+            error?.let {
+                showErrorMessage(error)
+            }
+        }
+    }
+
 
     private fun navigateToHome(status: Boolean) {
         when {
@@ -48,10 +83,10 @@ class RegisterActivity : AppCompatActivity() {
     private fun showLoading(status: Boolean) {
         when {
             status -> {
-                pb_register.visibility = View.VISIBLE
+                binding.pbRegister.visibility = View.VISIBLE
             }
             else -> {
-                pb_register.visibility = View.GONE
+                binding.pbRegister.visibility = View.GONE
             }
         }
     }

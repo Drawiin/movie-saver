@@ -6,13 +6,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
+import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.jessica.yourfavoritemovies.Constants.LANGUAGE_PT_BR
 import com.jessica.yourfavoritemovies.R
 import com.jessica.yourfavoritemovies.adapter.MovieAdapter
+import com.jessica.yourfavoritemovies.authentication.view.LoginActivity
+import com.jessica.yourfavoritemovies.databinding.ActivityHomeBinding
 import com.jessica.yourfavoritemovies.favorites.view.FavoritesActivity
 import com.jessica.yourfavoritemovies.home.viewmodel.HomeViewModel
 import com.jessica.yourfavoritemovies.model.Result
@@ -31,44 +37,62 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
+    private lateinit var binding: ActivityHomeBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
-        rv_movies.adapter = adapter
-        rv_movies.layoutManager = GridLayoutManager(this, 2)
-        initViewModel()
-        viewModel.getListMovies(LANGUAGE_PT_BR)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        setupUi()
+        subscribeUi()
     }
 
-    private fun initViewModel() {
-        viewModel.stateList.observe(this, Observer { state ->
+    private fun setupUi() {
+        binding.rvMovies.apply {
+            adapter = this@HomeActivity.adapter
+            layoutManager = GridLayoutManager(this@HomeActivity, 2)
+        }
+    }
+
+    private fun subscribeUi() {
+        viewModel.stateList.observe(this) { state ->
             state?.let {
                 showListMovies(it as MutableList<Result>)
             }
-        })
+        }
 
-        //TODO - Impementar o observer referente ao filme favoritado
+        viewModel.stateFavorite.observe(this) { favorite ->
+            favorite?.let {
+                showFavoriteMessage(it)
+            }
+        }
 
-        viewModel.loading.observe(this, Observer { loading ->
+        viewModel.loading.observe(this) { loading ->
             loading?.let {
                 showLoading(it)
             }
-        })
+        }
 
-        viewModel.error.observe(this, Observer { loading ->
+        viewModel.error.observe(this) { loading ->
             loading?.let {
                 showErrorMessage(it)
             }
-        })
+        }
     }
 
     private fun showListMovies(list: MutableList<Result>) {
         adapter.updateList(list)
     }
 
+    private fun showFavoriteMessage(result: Result) {
+        Snackbar.make(
+            binding.rvMovies,
+            "Filme ${result.title} adicionado com sucesso",
+            Snackbar.LENGTH_LONG
+        )
+    }
+
     private fun favoriteMovie(result: Result) {
-        //TODO - Referenciar a partir do viewmodel a função responsável por favoritar
+        viewModel.saveFavorite(result)
     }
 
     private fun showLoading(status: Boolean) {
@@ -92,16 +116,31 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.action_favoritos) {
-            startActivity(Intent(this, FavoritesActivity::class.java))
-            return true
+        when (item.itemId) {
+            R.id.action_favoritos -> {
+                startActivity(Intent(this, FavoritesActivity::class.java))
+                return true
+            }
+            R.id.action_logout -> {
+                logout()
+                return true
+            }
         }
-
-        //TODO - Verificar o item de logout
-
         return super.onOptionsItemSelected(item)
     }
 
-    //TODO - Implementar o logout da aplicação
+    private fun logout() {
+        AuthUI.getInstance()
+            .signOut(this)
+            .addOnCompleteListener {
+                startActivity(
+                    Intent(
+                        this,
+                        LoginActivity::class.java
+                    )
+                )
+                finish()
+            }
+
+    }
 }

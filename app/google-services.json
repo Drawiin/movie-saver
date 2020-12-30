@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "690220572830",
+    "project_id": "movie-saver-3353a",
+    "storage_bucket": "movie-saver-3353a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690220572830:android:d6017f8c6afc4c9b33db8f",
+        "android_client_info": {
+          "package_name": "com.jessica.yourfavoritemovies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690220572830-snka0oe8sidbka56iknr4j524j9vjaa6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCogOwoS4EnnWE_6tWsUfcDF2xZNuPmoLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "690220572830-snka0oe8sidbka56iknr4j524j9vjaa6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
