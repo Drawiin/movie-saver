@@ -17,6 +17,10 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
     var stateRemoveFavorite: MutableLiveData<Result> = MutableLiveData()
     var stateList: MutableLiveData<List<Result>> = MutableLiveData()
 
+    init {
+        loadFavorites()
+    }
+
     fun removeFavorite(result: Result) {
         val database = Firebase.database
         val reference = database.getReference(

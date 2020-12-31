@@ -3,11 +3,14 @@ package com.jessica.yourfavoritemovies.favorites.view
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.jessica.yourfavoritemovies.R
 import com.jessica.yourfavoritemovies.adapter.MovieAdapter
+import com.jessica.yourfavoritemovies.databinding.ActivityFavoritesBinding
 import com.jessica.yourfavoritemovies.favorites.viewmodel.FavoriteViewModel
 import com.jessica.yourfavoritemovies.model.Result
 import kotlinx.android.synthetic.main.activity_favorites.*
@@ -26,33 +29,53 @@ class FavoritesActivity : AppCompatActivity() {
         )
     }
 
+    private lateinit var binding: ActivityFavoritesBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_favorites)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_favorites)
+        setupUi()
+        subscribeUi()
+    }
+
+    private fun setupUi() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
         supportActionBar?.setDisplayShowHomeEnabled(true);
-        rv_movies_favorites.adapter = adapter
-        rv_movies_favorites.layoutManager = LinearLayoutManager(this)
-       //TODO - Recupera a lista de filmes favoritados a partir do viewmodel
+        binding.rvMoviesFavorites.apply {
+            adapter = this@FavoritesActivity.adapter
+            layoutManager = LinearLayoutManager(this@FavoritesActivity)
+        }
     }
 
-    private fun removeFavoriteMovie(result: Result){
-        //TODO - Referenciar a partir do viewmodel a função responsável por remover um filme
+    private fun subscribeUi() {
+        viewModel.stateList.observe(this) {favorites ->
+            favorites?.let {
+                showListFavorites(it as MutableList<Result>)
+            }
+        }
+
+        viewModel.stateRemoveFavorite.observe(this) {removed ->
+            removed?.let {
+                showMessageRemovedFavorite(it)
+            }
+        }
     }
 
-    //TODO - Implementar os observers do viewmodel
+    private fun removeFavoriteMovie(result: Result) {
+        viewModel.removeFavorite(result)
+    }
 
 
-    private fun showListFavorites(list: MutableList<Result>){
+    private fun showListFavorites(list: MutableList<Result>) {
         adapter.removeItem(resultRemove)
         adapter.updateList(list)
     }
 
-    private fun showMessageRemovedFavorite(result: Result){
+    private fun showMessageRemovedFavorite(result: Result) {
         resultRemove = result
         Snackbar.make(
             rv_movies_favorites,
-             resources.getString(R.string.removed_movie, result.title),
+            resources.getString(R.string.removed_movie, result.title),
             Snackbar.LENGTH_LONG
         ).show()
     }
