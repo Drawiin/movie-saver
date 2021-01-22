@@ -17,4 +17,6 @@
     <dimen name="corner_10">10dp</dimen>
     <dimen name="margin_96">96dp</dimen>
     <dimen name="margin_32">32dp</dimen>
+    <dimen name="spacing_half">8dp</dimen>
+    <dimen name="spacing_default">16dp</dimen>
 </resources>

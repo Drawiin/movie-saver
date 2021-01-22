@@ -1,23 +1,24 @@
 <resources>
     <string name="app_name">Movies</string>
-    <string name="action_logout">Exit</string>
-    <string name="action_favoritos">Favorites</string>
-    <string name="title_activity_login">Login</string>
-    <string name="title_activity_movies">Movies</string>
-    <string name="title_activity_register">Register</string>
-    <string name="title_activity_favorites">Favorites</string>
+    <string name="action_logout">Sair</string>
+    <string name="action_favoritos">Favoritos</string>
+    <string name="title_activity_login">Entar</string>
+    <string name="title_activity_movies">Filmes</string>
+    <string name="title_activity_register">Registrar</string>
+    <string name="title_activity_favorites">Favoritos</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="prompt_password">Senha</string>
+    <string name="action_sign_in_short">Entrar</string>
     <string name="login_failed">"Login failed!"</string>
-    <string name="name">Name</string>
-    <string name="register">Register</string>
-    <string name="create_account">Create account</string>
+    <string name="name">Nome</string>
+    <string name="register">Registrar</string>
+    <string name="create_account">Criar conta</string>
     <string name="default_notification_channel_id">favoritemovie</string>
     <string name="notification_title">Favorite Movie</string>
     <string name="notification_text">We have new movies for you!</string>
     <string name="notification_ok">OK!</string>
     <string name="removed_movie">"Removed film - %s</string>
     <string name="added_movie">"Movie added - %s</string>
+    <string name="login">Entrar</string>
 
 </resources>
