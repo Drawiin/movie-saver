@@ -12,6 +12,12 @@
     <color name="gray_eeeeee">#eeeeee</color>
     <color name="purple">#8360c3</color>
     <color name="green">#2ebf91</color>
+    <color name="orange">#f12711</color>
+    <color name="yellow">#f5af19</color>
     <color name="smokeWhite">#f5f5f5</color>
+    <color name="oceanBlue">#373b44</color>
+    <color name="deepBlue">#4286f4</color>
+    <color name="superPink">#c33764</color>
+    <color name="superBlue">#1d2671</color>
 
 </resources>

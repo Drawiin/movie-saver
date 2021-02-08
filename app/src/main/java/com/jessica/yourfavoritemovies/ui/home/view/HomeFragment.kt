@@ -5,6 +5,8 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
@@ -42,7 +44,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
         setupUi()
         subscribeUi()
     }
@@ -51,6 +52,19 @@ class HomeFragment : Fragment() {
         binding.rvMovies.apply {
             adapter = this@HomeFragment.adapter
             layoutManager = GridLayoutManager(activity, 2)
+        }
+        binding.toolBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_favoritos -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
+                    true
+                }
+                R.id.action_logout -> {
+                    activity?.finish()
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -112,24 +126,6 @@ class HomeFragment : Fragment() {
         Snackbar.make(rv_movies, message, Snackbar.LENGTH_LONG).show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_main, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_favoritos -> {
-                //TODO - Go TO Favorites
-                return true
-            }
-            R.id.action_logout -> {
-                logout()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     private fun logout() {
         context?.let {

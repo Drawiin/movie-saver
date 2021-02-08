@@ -2,7 +2,8 @@
 
     <style name="Theme.YourFavoriteMovies" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/white</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/smokeWhite</item>
+        <item name="colorControlNormal">@color/smokeWhite</item>
     </style>
 
     <style name="TextInputLayoutStyle" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -10,6 +11,11 @@
         <item name="boxStrokeColor">@color/text_input_stroke_selector</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="strokeColor">@color/white</item>
+    </style>
+
+    <style name="TitleText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/smokeWhite</item>
     </style>
 
     <style name="ButtonFilled" parent="@style/Widget.MaterialComponents.Button.UnelevatedButton">
