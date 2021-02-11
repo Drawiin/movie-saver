@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "690220572830",
+    "firebase_url": "https://movie-saver-3353a-default-rtdb.firebaseio.com",
     "project_id": "movie-saver-3353a",
     "storage_bucket": "movie-saver-3353a.appspot.com"
   },

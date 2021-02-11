@@ -25,7 +25,8 @@
                 app:elevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:liftOnScroll="true">
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/tool_bar"

@@ -2,7 +2,6 @@ package com.jessica.yourfavoritemovies.ui.favorites.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -85,12 +84,5 @@ class FavoritesFragment : Fragment() {
             resources.getString(R.string.removed_movie, result.title),
             Snackbar.LENGTH_LONG
         ).show()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            //TODO -> Go To Home
-        }
-        return super.onOptionsItemSelected(item)
     }
 }
