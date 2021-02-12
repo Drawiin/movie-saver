@@ -19,4 +19,8 @@ class MainActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
 }

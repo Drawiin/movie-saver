@@ -4,71 +4,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.home.view.HomeFragment">
 
-
-    <androidx.core.widget.NestedScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:background="@drawable/background_gradient_celestial"
+        android:fitsSystemWindows="true">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/background_gradient_celestial">
+            android:layout_height="120dp"
+            android:layout_marginTop="@dimen/spacing_double"
+            android:background="@color/fui_transparent"
+            android:elevation="0dp"
+            android:fitsSystemWindows="true"
+            app:elevation="0dp">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/app_bar_layout"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_double"
-                android:background="@color/fui_transparent"
-                app:elevation="0dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:liftOnScroll="true">
+                android:layout_height="match_parent"
+                android:elevation="0dp"
+                app:contentScrim="@color/fui_transparent"
+                app:expandedTitleTextAppearance="@style/TitleTextLarge"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
+                app:toolbarId="@+id/toolbar">
 
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/tool_bar"
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:background="@color/fui_transparent"
                     android:elevation="0dp"
+                    app:layout_collapseMode="pin"
                     app:menu="@menu/menu_main"
-                    app:title="@string/title_activity_movies"
+                    app:title="@string/title_activity_movies_popular"
                     app:titleTextAppearance="@style/TitleText"
                     app:titleTextColor="@color/smokeWhite" />
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            </com.google.android.material.appbar.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_movies"
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_recycler_view" />
+                android:layout_height="match_parent"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingBottom="80dp">
 
-            <ProgressBar
-                android:id="@+id/pb_movies"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_8"
-                android:layout_marginEnd="@dimen/margin_8"
-                android:layout_marginBottom="@dimen/margin_8"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_movies"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_recycler_view" />
 
-    </androidx.core.widget.NestedScrollView>
+                <ProgressBar
+                    android:id="@+id/pb_movies"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_8"
+                    android:layout_marginEnd="@dimen/margin_8"
+                    android:layout_marginBottom="@dimen/margin_8"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -15,7 +15,12 @@
     </style>
 
     <style name="TitleText">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/smokeWhite</item>
+    </style>
+
+    <style name="TitleTextLarge">
+        <item name="android:textSize">28sp</item>
         <item name="android:textColor">@color/smokeWhite</item>
     </style>
 
