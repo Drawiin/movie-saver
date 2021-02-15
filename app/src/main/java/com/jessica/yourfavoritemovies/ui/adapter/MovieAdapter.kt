@@ -1,29 +1,22 @@
 package com.jessica.yourfavoritemovies.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.jessica.yourfavoritemovies.utils.Constants.BASE_IMAGE_URL
 import com.jessica.yourfavoritemovies.R
+import com.jessica.yourfavoritemovies.databinding.ItemRecyclerViewBinding
 import com.jessica.yourfavoritemovies.model.Result
+import com.jessica.yourfavoritemovies.utils.Constants.BASE_IMAGE_URL
 
 class MovieAdapter(
     var listMovie: MutableList<Result>,
     val onClick: (item: Result) -> Unit
 ) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_recycler_view, parent, false)
-        return ViewHolder(
-            view
-        )
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder.inflate(parent)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.onBind(listMovie[position])
@@ -51,17 +44,24 @@ class MovieAdapter(
         notifyDataSetChanged()
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val title = itemView.findViewById<TextView>(R.id.tv_title)
-        private val image = itemView.findViewById<ImageView>(R.id.iv_movie)
-        val favorite: ImageView = itemView.findViewById<ImageView>(R.id.iv_favorite)
+    class ViewHolder(val binding: ItemRecyclerViewBinding) : RecyclerView.ViewHolder(binding.root) {
+        val favorite: ImageView = itemView.findViewById(R.id.iv_favorite)
 
         fun onBind(result: Result) {
-            title.text = result.title
-
-            Glide.with(itemView.context).load("$BASE_IMAGE_URL${result.posterPath}")
+            Glide.with(itemView.context)
+                .load("$BASE_IMAGE_URL${result.posterPath}")
                 .placeholder(R.mipmap.ic_movie)
-                .into(image)
+                .into(binding.ivMovie)
+        }
+
+        companion object {
+            fun inflate(parent: ViewGroup) = ViewHolder(
+                ItemRecyclerViewBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
         }
     }
 }

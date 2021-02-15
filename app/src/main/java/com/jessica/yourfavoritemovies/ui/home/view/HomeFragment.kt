@@ -65,7 +65,7 @@ class HomeFragment : Fragment() {
     private fun setupUi() {
         binding.rvMovies.apply {
             adapter = this@HomeFragment.adapter
-            layoutManager = GridLayoutManager(activity, 2)
+            layoutManager = GridLayoutManager(activity, 3)
         }
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
