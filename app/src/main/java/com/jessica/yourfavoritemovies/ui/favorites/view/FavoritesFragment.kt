@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.jessica.yourfavoritemovies.R
 import com.jessica.yourfavoritemovies.databinding.FragmentFavoritesBinding
@@ -49,7 +49,7 @@ class FavoritesFragment : Fragment() {
     private fun setupUi() {
         binding.rvMoviesFavorites.apply {
             adapter = this@FavoritesFragment.adapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = GridLayoutManager(context, 3)
         }
     }
 
