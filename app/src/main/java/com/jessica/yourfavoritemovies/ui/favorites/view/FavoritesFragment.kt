@@ -51,6 +51,9 @@ class FavoritesFragment : Fragment() {
             adapter = this@FavoritesFragment.adapter
             layoutManager = GridLayoutManager(context, 3)
         }
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 
     private fun subscribeUi() {
