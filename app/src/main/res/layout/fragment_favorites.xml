@@ -7,17 +7,14 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_gradient"
-        android:fitsSystemWindows="true">
+        android:background="@drawable/background_gradient">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content"
             android:background="@color/fui_transparent"
             android:elevation="0dp"
-            android:fitsSystemWindows="true"
             app:elevation="0dp">
 
             <androidx.appcompat.widget.Toolbar
@@ -46,8 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipChildren="false"
-                android:clipToPadding="false"
-                android:paddingBottom="80dp">
+                android:clipToPadding="false">
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -70,6 +66,7 @@
                     android:layout_marginStart="@dimen/margin_8"
                     android:layout_marginEnd="@dimen/margin_8"
                     android:layout_marginBottom="@dimen/margin_8"
+                    android:progressTint="@color/purple"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
