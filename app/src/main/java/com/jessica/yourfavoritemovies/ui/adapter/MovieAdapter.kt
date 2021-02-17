@@ -50,7 +50,7 @@ class MovieAdapter(
         fun onBind(result: Result) {
             Glide.with(itemView.context)
                 .load("$BASE_IMAGE_URL${result.posterPath}")
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_placeholder)
                 .into(binding.ivMovie)
         }
 
