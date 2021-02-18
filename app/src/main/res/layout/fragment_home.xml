@@ -58,19 +58,17 @@
                     tools:itemCount="3"
                     tools:listitem="@layout/item_recycler_view" />
 
-                <ProgressBar
-                    android:id="@+id/pb_movies"
-                    android:layout_width="wrap_content"
+                <include
+                    android:id="@+id/shimmer_loading"
+                    layout="@layout/skeleton_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_8"
-                    android:layout_marginEnd="@dimen/margin_8"
-                    android:layout_marginBottom="@dimen/margin_8"
-                    android:progressTint="@color/purple"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

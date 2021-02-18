@@ -14,10 +14,14 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.jessica.yourfavoritemovies.R
 import com.jessica.yourfavoritemovies.databinding.FragmentHomeBinding
+import com.jessica.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
+import com.jessica.yourfavoritemovies.getDeviceHeight
+import com.jessica.yourfavoritemovies.getDeviceWidth
 import com.jessica.yourfavoritemovies.model.Result
 import com.jessica.yourfavoritemovies.ui.adapter.MovieAdapter
 import com.jessica.yourfavoritemovies.ui.home.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlin.math.ceil
 
 class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by lazy {
@@ -65,7 +69,7 @@ class HomeFragment : Fragment() {
     private fun setupUi() {
         binding.rvMovies.apply {
             adapter = this@HomeFragment.adapter
-            layoutManager = GridLayoutManager(activity, 3)
+            layoutManager = GridLayoutManager(activity, GRID_SPAN_COUNT)
         }
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
@@ -74,7 +78,7 @@ class HomeFragment : Fragment() {
                     true
                 }
                 R.id.action_logout -> {
-                    requireActivity().finish()
+                    logout()
                     true
                 }
                 else -> false
@@ -127,13 +131,38 @@ class HomeFragment : Fragment() {
     private fun showLoading(status: Boolean) {
         when {
             status -> {
-                binding.pbMovies.visibility = View.VISIBLE
-
+                showShimmerLoading()
             }
             else -> {
-                binding.pbMovies.visibility = View.GONE
+
+                hideShimmerLoading()
             }
         }
+    }
+
+    private fun showShimmerLoading() = context?.run {
+        val shimmerLoading = binding.shimmerLoading
+        val itemMargin = resources.getDimension(R.dimen.spacing_half)
+        val itemWidth = (getDeviceWidth() / GRID_SPAN_COUNT) - (2 * itemMargin)
+        val itemHeight = itemWidth * GRID_ITEM_RATIO_H
+        val moviesCount = ceil((getDeviceHeight() / itemHeight) * GRID_SPAN_COUNT).toInt()
+
+        (0..moviesCount).forEach { _ ->
+            shimmerLoading.container.addView(MovieSkeletonLayoutBinding.inflate(
+                LayoutInflater.from(context),
+                binding.shimmerLoading.container,
+                false
+            ).root.apply {
+                layoutParams.width = itemWidth.toInt()
+            })
+        }
+        shimmerLoading.root.visibility = View.VISIBLE
+        shimmerLoading.shimmerLayout.startShimmer()
+    }
+
+    private fun hideShimmerLoading() = binding.shimmerLoading.run {
+        shimmerLayout.stopShimmer()
+        root.visibility = View.GONE
     }
 
     private fun showErrorMessage(message: String) {
@@ -146,8 +175,13 @@ class HomeFragment : Fragment() {
             AuthUI.getInstance()
                 .signOut(it)
                 .addOnCompleteListener {
-                    //TODO -> Go to Login
+                    requireActivity().finish()
                 }
         }
+    }
+
+    companion object {
+        private const val GRID_SPAN_COUNT = 3
+        private const val GRID_ITEM_RATIO_H = 1.7f
     }
 }
