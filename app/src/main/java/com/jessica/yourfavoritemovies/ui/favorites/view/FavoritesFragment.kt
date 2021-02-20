@@ -11,9 +11,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.jessica.yourfavoritemovies.R
 import com.jessica.yourfavoritemovies.databinding.FragmentFavoritesBinding
+import com.jessica.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
+import com.jessica.yourfavoritemovies.getDeviceHeight
+import com.jessica.yourfavoritemovies.getDeviceWidth
 import com.jessica.yourfavoritemovies.model.Result
 import com.jessica.yourfavoritemovies.ui.adapter.MovieAdapter
 import com.jessica.yourfavoritemovies.ui.favorites.viewmodel.FavoriteViewModel
+import kotlin.math.ceil
 
 class FavoritesFragment : Fragment() {
     private var resultRemove = Result()
@@ -68,6 +72,10 @@ class FavoritesFragment : Fragment() {
                 showMessageRemovedFavorite(it)
             }
         }
+
+        viewModel.loading.observe(viewLifecycleOwner) {
+            showLoading(it)
+        }
     }
 
     private fun removeFavoriteMovie(result: Result) {
@@ -87,5 +95,49 @@ class FavoritesFragment : Fragment() {
             resources.getString(R.string.removed_movie, result.title),
             Snackbar.LENGTH_LONG
         ).show()
+    }
+
+    private fun showLoading(status: Boolean) {
+        when {
+            status -> {
+                showShimmerLoading()
+            }
+            else -> {
+
+                hideShimmerLoading()
+            }
+        }
+    }
+
+    private fun showShimmerLoading() = context?.run {
+        val shimmerLoading = binding.shimmerLoading
+        val itemMargin = resources.getDimension(R.dimen.spacing_half)
+        val itemWidth = (getDeviceWidth() / GRID_SPAN_COUNT) - (2 * itemMargin)
+        val itemHeight = itemWidth * GRID_ITEM_RATIO_H
+        val moviesCount =
+            ceil((getDeviceHeight() / itemHeight) * GRID_SPAN_COUNT).toInt()
+
+        (0..moviesCount).forEach { _ ->
+            shimmerLoading.container.addView(
+                MovieSkeletonLayoutBinding.inflate(
+                    LayoutInflater.from(context),
+                    binding.shimmerLoading.container,
+                    false
+                ).root.apply {
+                    layoutParams.width = itemWidth.toInt()
+                })
+        }
+        shimmerLoading.root.visibility = View.VISIBLE
+        shimmerLoading.shimmerLayout.startShimmer()
+    }
+
+    private fun hideShimmerLoading() = binding.shimmerLoading.run {
+        shimmerLayout.stopShimmer()
+        root.visibility = View.GONE
+    }
+
+    companion object {
+        private const val GRID_SPAN_COUNT = 3
+        private const val GRID_ITEM_RATIO_H = 1.7f
     }
 }

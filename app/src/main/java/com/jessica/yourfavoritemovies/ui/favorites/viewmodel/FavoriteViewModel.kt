@@ -8,60 +8,63 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.jessica.yourfavoritemovies.model.Result
 import com.jessica.yourfavoritemovies.utils.Constants
 import com.jessica.yourfavoritemovies.utils.Constants.ID_PATH
 import com.jessica.yourfavoritemovies.utils.MovieUtil
-import com.jessica.yourfavoritemovies.model.Result
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
+
     var stateRemoveFavorite: MutableLiveData<Result> = MutableLiveData()
     var stateList: MutableLiveData<List<Result>> = MutableLiveData()
+    var loading: MutableLiveData<Boolean> = MutableLiveData()
+
+    private val favoritesPath by lazy {
+        MovieUtil.getUserId(getApplication()).toString() + Constants.FAVORITES_PATH
+    }
 
     init {
         loadFavorites()
     }
 
-    fun removeFavorite(result: Result) {
-        val database = Firebase.database
-        val reference = database.getReference(
-            MovieUtil.getUserId(getApplication()).toString() + Constants.FAVORITES_PATH
-        )
+    private fun loadFavorites() = Firebase.database.getReference(favoritesPath).apply {
+        loading.value = true
+        orderByKey()
+        addValueEventListener(getLoadValueListener())
+    }
 
-        reference.orderByChild(ID_PATH).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {}
+    private fun getLoadValueListener() = object : ValueEventListener {
+        override fun onCancelled(error: DatabaseError) {}
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach { valueSnapshot ->
-                    valueSnapshot.getValue(Result::class.java)?.id?.let { id ->
-                        when (id) {
-                            result.id -> {
-                                valueSnapshot.ref.removeValue()
-                                stateRemoveFavorite.value = result
-                            }
-                        }
+        override fun onDataChange(snapshot: DataSnapshot) = stateList.run {
+            value = snapshot.children.mapNotNull { result ->
+                result.getValue(Result::class.java)
+            }.toList()
+            loading.value = false
+        }
+    }
+
+    fun removeFavorite(result: Result) = Firebase.database.getReference(favoritesPath).apply {
+        orderByChild(ID_PATH)
+        addListenerForSingleValueEvent(getRemoveValueListener(result))
+    }
+
+    private fun getRemoveValueListener(result: Result) = object : ValueEventListener {
+        override fun onCancelled(error: DatabaseError) {}
+
+        override fun onDataChange(
+            snapshot: DataSnapshot
+        ) = snapshot.children.forEach { valueSnapshot ->
+            valueSnapshot.getValue(Result::class.java)?.id?.let { id ->
+                when (id) {
+                    result.id -> {
+                        valueSnapshot.ref.removeValue()
+                        stateRemoveFavorite.value = result
                     }
                 }
             }
-
-        })
+        }
     }
 
-    private fun loadFavorites() {
-        val database = Firebase.database
-        val reference = database.getReference(
-            MovieUtil.getUserId(getApplication()).toString() + Constants.FAVORITES_PATH
-        )
-
-        reference.orderByKey().addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {}
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                stateList.value =
-                    snapshot.children.mapNotNull { result -> result.getValue(Result::class.java) }
-                        .toList()
-            }
-
-        })
-    }
 
 }
