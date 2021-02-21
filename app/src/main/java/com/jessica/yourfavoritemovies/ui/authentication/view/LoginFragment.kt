@@ -55,6 +55,7 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(R.id.action_loginFragment2_to_registerFragment)
             }
         }
+        viewModel.loadLoggedUser()
     }
 
     private fun subscribeUi() {

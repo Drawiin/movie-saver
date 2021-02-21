@@ -126,7 +126,7 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.error.observe(viewLifecycleOwner) { loading ->
-            loading?.let {
+            loading?.getContentIfNotHandled()?.let {
                 showErrorMessage(it)
             }
         }
@@ -200,6 +200,6 @@ class HomeFragment : Fragment() {
 
     companion object {
         private const val GRID_SPAN_COUNT = 3
-        private const val GRID_ITEM_RATIO_H = 1.7f
+        private const val GRID_ITEM_RATIO_H = 1.5f
     }
 }

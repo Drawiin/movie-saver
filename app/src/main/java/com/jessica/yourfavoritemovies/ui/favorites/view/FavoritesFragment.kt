@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
@@ -169,6 +168,6 @@ class FavoritesFragment : Fragment() {
 
     companion object {
         private const val GRID_SPAN_COUNT = 3
-        private const val GRID_ITEM_RATIO_H = 1.7f
+        private const val GRID_ITEM_RATIO_H = 1.5f
     }
 }

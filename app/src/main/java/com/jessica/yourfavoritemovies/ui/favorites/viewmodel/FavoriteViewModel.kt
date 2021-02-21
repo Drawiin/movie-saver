@@ -23,17 +23,26 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
         MovieUtil.getUserId(getApplication()).toString() + Constants.FAVORITES_PATH
     }
 
+    private val databaseRef by lazy {
+        Firebase.database.getReference(favoritesPath)
+    }
+
     init {
         loadFavorites()
     }
 
-    private fun loadFavorites() = Firebase.database.getReference(favoritesPath).apply {
+    private fun loadFavorites() = databaseRef.run {
         loading.value = true
         orderByKey()
-        addValueEventListener(getLoadValueListener())
+        addValueEventListener(loadValueListener())
     }
 
-    private fun getLoadValueListener() = object : ValueEventListener {
+    fun removeFavorite(result: Result) = databaseRef.run {
+        orderByChild(ID_PATH)
+        addListenerForSingleValueEvent(removeValueListener(result))
+    }
+
+    private fun loadValueListener() = object : ValueEventListener {
         override fun onCancelled(error: DatabaseError) {}
 
         override fun onDataChange(snapshot: DataSnapshot) = stateList.run {
@@ -44,21 +53,15 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun removeFavorite(result: Result) = Firebase.database.getReference(favoritesPath).apply {
-        orderByChild(ID_PATH)
-        addListenerForSingleValueEvent(getRemoveValueListener(result))
-    }
-
-    private fun getRemoveValueListener(result: Result) = object : ValueEventListener {
+    private fun removeValueListener(result: Result) = object : ValueEventListener {
         override fun onCancelled(error: DatabaseError) {}
 
-        override fun onDataChange(
-            snapshot: DataSnapshot
-        ) = snapshot.children.forEach { valueSnapshot ->
-            valueSnapshot.getValue(Result::class.java)?.id?.let { id ->
+        override fun onDataChange(snapshot: DataSnapshot) = snapshot.children.forEach { value ->
+            value.getValue(Result::class.java)?.id?.let { id ->
+                if (id == result.id)
                 when (id) {
                     result.id -> {
-                        valueSnapshot.ref.removeValue()
+                        value.ref.removeValue()
                         stateRemoveFavorite.value = result
                     }
                 }
