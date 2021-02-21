@@ -38,24 +38,23 @@ class RegisterFragment : Fragment() {
         subscribeUi()
     }
 
-    private fun setupUi() {
-        binding.run {
-            buttonGoToLogin.setOnClickListener {
-                activity?.onBackPressed()
-            }
-            btnRegister.setOnClickListener {
-                val name = inputName.text.toString()
-                val email = inputEmail.text.toString()
-                val password = inputPassword.text.toString()
+    private fun setupUi() = binding.run {
+        buttonGoToLogin.setOnClickListener {
+            activity?.onBackPressed()
+        }
+        btnRegister.setOnClickListener {
+            val name = inputName.text.toString()
+            val email = inputEmail.text.toString()
+            val password = inputPassword.text.toString()
 
-                when {
-                    MovieUtil.validateNameEmailPassword(name, email, password) -> {
+            when {
+                MovieUtil.validateNameEmailPassword(name, email, password) -> {
                         viewModel.registerUser(email, password)
                     }
                 }
             }
         }
-    }
+
 
     private fun subscribeUi() {
         viewModel.stateRegister.observe(viewLifecycleOwner) { state ->

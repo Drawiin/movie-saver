@@ -6,10 +6,10 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_half"
+        android:layout_margin="@dimen/default_card_spacing"
         android:background="@color/fui_transparent"
         android:backgroundTint="@color/fui_transparent"
-        app:cardCornerRadius="@dimen/spacing_half"
+        app:cardCornerRadius="@dimen/default_card_spacing"
         app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout

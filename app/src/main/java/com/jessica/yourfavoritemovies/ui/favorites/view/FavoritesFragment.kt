@@ -141,11 +141,11 @@ class FavoritesFragment : Fragment() {
 
     private fun showShimmerLoading() = context?.run {
         val shimmerLoading = binding.shimmerLoading
-        val itemMargin = resources.getDimension(R.dimen.spacing_half)
+        val itemMargin = resources.getDimension(R.dimen.default_card_spacing)
         val itemWidth = (getDeviceWidth() / GRID_SPAN_COUNT) - (2 * itemMargin)
         val itemHeight = itemWidth * GRID_ITEM_RATIO_H
         val moviesCount =
-            ceil((getDeviceHeight() / itemHeight) * GRID_SPAN_COUNT).toInt()
+            ceil((getDeviceHeight() / (itemHeight + itemMargin * 2)) * GRID_SPAN_COUNT).toInt()
 
         (0..moviesCount).forEach { _ ->
             shimmerLoading.container.addView(

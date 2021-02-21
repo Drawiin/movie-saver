@@ -10,7 +10,7 @@
     <dimen name="margin_24">24dp</dimen>
     <dimen name="margin_64">64dp</dimen>
     <dimen name="margin_72">72dp</dimen>
-    <dimen name="border_4">4dp</dimen>
+    <dimen name="default_card_spacing">3dp</dimen>
     <dimen name="width_100">100dp</dimen>
     <dimen name="height_100">100dp</dimen>
     <dimen name="margin_48">48dp</dimen>

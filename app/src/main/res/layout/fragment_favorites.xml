@@ -48,6 +48,7 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:paddingHorizontal="@dimen/default_card_spacing"
                     android:id="@+id/rv_movies_favorites"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
