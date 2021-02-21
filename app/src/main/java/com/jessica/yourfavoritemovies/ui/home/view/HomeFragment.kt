@@ -11,6 +11,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.firebase.ui.auth.AuthUI
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.jessica.yourfavoritemovies.R
 import com.jessica.yourfavoritemovies.databinding.FragmentHomeBinding
@@ -23,7 +24,10 @@ import com.jessica.yourfavoritemovies.ui.home.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlin.math.ceil
 
+
 class HomeFragment : Fragment() {
+    private var isAppBarExpanded = true
+
     private val viewModel: HomeViewModel by lazy {
         ViewModelProvider(this).get(
             HomeViewModel::class.java
@@ -38,17 +42,6 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    isEnabled = false
-                    activity?.onBackPressed()
-                }
-            })
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,12 +52,35 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(
+                viewLifecycleOwner,
+                getOnBackPressedCallback()
+            )
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
         subscribeUi()
     }
+
+    private fun getOnBackPressedCallback() =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() =
+                if (binding.nestedScroll.scrollY > 0 || !isAppBarExpanded) {
+                    binding.nestedScroll.smoothScrollTo(0, 0)
+                    binding.appbar.setExpanded(true, true)
+                } else {
+                    isEnabled = false
+                    requireActivity().finishAndRemoveTask()
+                }
+
+        }
 
     private fun setupUi() {
         binding.rvMovies.apply {
@@ -84,6 +100,10 @@ class HomeFragment : Fragment() {
                 else -> false
             }
         }
+
+        binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset: Int ->
+            isAppBarExpanded = verticalOffset == 0
+        })
     }
 
     private fun subscribeUi() {
@@ -169,16 +189,14 @@ class HomeFragment : Fragment() {
         Snackbar.make(rv_movies, message, Snackbar.LENGTH_LONG).show()
     }
 
-
-    private fun logout() {
-        context?.let {
-            AuthUI.getInstance()
-                .signOut(it)
-                .addOnCompleteListener {
-                    requireActivity().finish()
-                }
-        }
+    private fun logout() = context?.let {
+        AuthUI.getInstance()
+            .signOut(it)
+            .addOnCompleteListener {
+                findNavController().navigate(R.id.goToLogin)
+            }
     }
+
 
     companion object {
         private const val GRID_SPAN_COUNT = 3

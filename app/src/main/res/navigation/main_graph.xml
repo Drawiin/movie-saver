@@ -3,6 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_graph"
     app:startDestination="@id/loginFragment2">
+    <action
+        android:id="@+id/goToLogin"
+        app:destination="@id/loginFragment2"
+        app:enterAnim="@anim/fui_slide_in_right"
+        app:exitAnim="@anim/fui_slide_out_left"
+        app:launchSingleTop="true"
+        app:popEnterAnim="@anim/fui_slide_in_right"
+        app:popExitAnim="@anim/fui_slide_out_left"
+        app:popUpTo="@id/main_graph"
+        app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/loginFragment2"
         android:name="com.jessica.yourfavoritemovies.ui.authentication.view.LoginFragment"
@@ -12,8 +22,11 @@
             app:destination="@id/homeFragment"
             app:enterAnim="@anim/fui_slide_in_right"
             app:exitAnim="@anim/fui_slide_out_left"
+            app:launchSingleTop="true"
             app:popEnterAnim="@anim/fui_slide_in_right"
-            app:popExitAnim="@anim/fui_slide_out_left" />
+            app:popExitAnim="@anim/fui_slide_out_left"
+            app:popUpTo="@id/main_graph"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loginFragment2_to_registerFragment"
             app:destination="@id/registerFragment"
@@ -30,14 +43,11 @@
         <action
             android:id="@+id/action_homeFragment_to_favoritesFragment"
             app:destination="@id/favoritesFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/slide_right"
+            app:popEnterAnim="@anim/slide_left"
+            app:popExitAnim="@anim/slide_right"
             app:popUpTo="@id/homeFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_loginFragment2"
-            app:destination="@id/loginFragment2" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -48,8 +58,11 @@
             app:destination="@id/homeFragment"
             app:enterAnim="@anim/fui_slide_in_right"
             app:exitAnim="@anim/fui_slide_out_left"
+            app:launchSingleTop="true"
             app:popEnterAnim="@anim/fui_slide_in_right"
-            app:popExitAnim="@anim/fui_slide_out_left" />
+            app:popExitAnim="@anim/fui_slide_out_left"
+            app:popUpTo="@id/main_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"

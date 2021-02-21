@@ -72,6 +72,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun navigateToHome(status: Boolean) {
+        if (!status) return
         when {
             status -> {
                 findNavController().navigate(R.id.action_loginFragment2_to_homeFragment)

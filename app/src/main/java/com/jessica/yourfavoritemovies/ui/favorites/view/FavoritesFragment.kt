@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.snackbar.Snackbar
 import com.jessica.yourfavoritemovies.R
 import com.jessica.yourfavoritemovies.databinding.FragmentFavoritesBinding
@@ -21,6 +24,8 @@ import kotlin.math.ceil
 
 class FavoritesFragment : Fragment() {
     private var resultRemove = Result()
+    private var isAppBarExpanded = true
+
     private val adapter: MovieAdapter by lazy {
         MovieAdapter(
             ArrayList(), this::removeFavoriteMovie
@@ -50,6 +55,29 @@ class FavoritesFragment : Fragment() {
         subscribeUi()
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(
+                viewLifecycleOwner,
+                getOnBackPressedCallback()
+            )
+    }
+
+    private fun getOnBackPressedCallback() =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() =
+                if (binding.nestedScroll.scrollY > 0 || !isAppBarExpanded) {
+                    binding.nestedScroll.smoothScrollTo(0, 0)
+                    binding.appbar.setExpanded(true, true)
+                } else {
+                    isEnabled = false
+                    requireActivity().onBackPressed()
+                }
+
+        }
+
     private fun setupUi() {
         binding.rvMoviesFavorites.apply {
             adapter = this@FavoritesFragment.adapter
@@ -58,6 +86,9 @@ class FavoritesFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
+        binding.appbar.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset: Int ->
+            isAppBarExpanded = verticalOffset == 0
+        })
     }
 
     private fun subscribeUi() {

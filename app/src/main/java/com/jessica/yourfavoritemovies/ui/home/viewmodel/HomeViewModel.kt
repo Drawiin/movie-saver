@@ -27,6 +27,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var loading: MutableLiveData<Boolean> = MutableLiveData()
     var stateFavorite: MutableLiveData<Result> = MutableLiveData()
 
+
     init {
         getListMovies(Constants.LANGUAGE_PT_BR)
     }

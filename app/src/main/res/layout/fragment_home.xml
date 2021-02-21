@@ -5,6 +5,7 @@
     tools:context=".ui.home.view.HomeFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_gradient">
@@ -33,6 +34,7 @@
 
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"

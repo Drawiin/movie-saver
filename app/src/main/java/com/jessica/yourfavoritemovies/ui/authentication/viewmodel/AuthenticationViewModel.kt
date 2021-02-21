@@ -14,6 +14,7 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
     val stateRegister: MutableLiveData<Boolean> = MutableLiveData()
     val stateLogin: MutableLiveData<Boolean> = MutableLiveData()
 
+
     private var auth: FirebaseAuth = Firebase.auth
 
     fun registerUser(email: String, password: String) {
@@ -52,7 +53,6 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
                 }
             }
     }
-
 
     private fun errorMessage() {
         error.value = "Something was wrong!!!"
