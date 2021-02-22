@@ -15,34 +15,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_email"
                 style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_24"
+                android:layout_marginTop="@dimen/margin_48"
                 android:layout_marginBottom="@dimen/spacing_half"
-                app:layout_constraintBottom_toBottomOf="@id/login_guideline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:startIconDrawable="@drawable/ic_outline_alternate_email">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:textColor="@color/white"
                     android:id="@+id/input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
-                    android:selectAllOnFocus="true" />
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/login_guideline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.35" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_password"
@@ -54,11 +50,10 @@
                 android:layout_marginEnd="@dimen/margin_24"
                 app:layout_constraintEnd_toEndOf="@+id/layout_email"
                 app:layout_constraintStart_toStartOf="@+id/layout_email"
-                app:layout_constraintTop_toBottomOf="@+id/login_guideline"
+                app:layout_constraintTop_toBottomOf="@id/layout_email"
                 app:startIconDrawable="@drawable/ic_outline_lock">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:textColor="@color/white"
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,7 +61,8 @@
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
-                    android:selectAllOnFocus="true" />
+                    android:selectAllOnFocus="true"
+                    android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -83,17 +79,83 @@
                 app:layout_constraintStart_toStartOf="@id/layout_password"
                 app:layout_constraintTop_toBottomOf="@id/layout_password" />
 
+            <LinearLayout
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginVertical="@dimen/spacing_double"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bt_login">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/white" />
+
+                <TextView
+                    style="@style/TitleTextLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_4"
+                    android:text="Ou"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+
+                    android:layout_weight="1"
+                    android:background="@color/white" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_google"
+                style="@style/ButtonOutlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_24"
+                android:layout_marginTop="@dimen/spacing_default"
+                android:text="@string/continue_with_google"
+                app:icon="@drawable/fui_ic_googleg_color_24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/spacing_default"
+                app:iconTint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/separator" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_facebook"
+                style="@style/ButtonOutlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_24"
+                android:text="@string/continue_with_facebook"
+                app:icon="@drawable/ic_baseline_facebook_24"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/spacing_default"
+                app:iconSize="28dp"
+                app:iconTint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_google" />
+
             <TextView
                 android:id="@+id/button_go_to_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
                 android:text="@string/create_account"
+                android:layout_marginBottom="48dp"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bt_login" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ProgressBar
                 android:id="@+id/pb_login"

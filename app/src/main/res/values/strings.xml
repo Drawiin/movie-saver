@@ -21,5 +21,7 @@
     <string name="removed_movie">"Removed film - %s</string>
     <string name="added_movie">"Movie added - %s</string>
     <string name="login">Entrar</string>
+    <string name="continue_with_google">Continuar com Google</string>
+    <string name="continue_with_facebook">Continuar com Facebook</string>
 
 </resources>

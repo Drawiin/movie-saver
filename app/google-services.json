@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:690220572830:android:d6017f8c6afc4c9b33db8f",
+        "mobilesdk_app_id": "1:690220572830:android:f89dca54f958076033db8f",
         "android_client_info": {
-          "package_name": "com.jessica.yourfavoritemovies"
+          "package_name": "com.drawiin.yourfavoritemovies"
         }
       },
       "oauth_client": [

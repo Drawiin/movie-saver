@@ -20,5 +20,7 @@
     <color name="deepBlue">#4286f4</color>
     <color name="superPink">#c33764</color>
     <color name="superBlue">#1d2671</color>
+    <color name="googleSignInBlue">#4285F4</color>
+    <color name="facebookSignInBlue">#4267b2</color>
 
 </resources>
