@@ -19,10 +19,12 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
 
     private var auth: FirebaseAuth = Firebase.auth
 
-    val googleSignInOptions by lazy {
+    val googleSignInOptions: GoogleSignInOptions by lazy {
         GoogleSignInOptions.Builder(
             GoogleSignInOptions.DEFAULT_SIGN_IN
-        ).apply { requestEmail() }.build()
+        ).requestEmail()
+            .requestIdToken("690220572830-snka0oe8sidbka56iknr4j524j9vjaa6.apps.googleusercontent.com")
+            .build()
     }
 
     fun registerUser(email: String, password: String) = auth.run {

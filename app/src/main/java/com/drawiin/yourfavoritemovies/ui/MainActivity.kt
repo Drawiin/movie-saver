@@ -20,5 +20,4 @@ class MainActivity : AppCompatActivity() {
             statusBarColor = ContextCompat.getColor(this@MainActivity, R.color.green)
         }
     }
-
 }

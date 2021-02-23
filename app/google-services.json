@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:690220572830:android:f89dca54f958076033db8f",
+        "mobilesdk_app_id": "1:690220572830:android:14209ec8e99701df33db8f",
         "android_client_info": {
           "package_name": "com.drawiin.yourfavoritemovies"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "690220572830-9mmeffpvg29764ugtrdv29jbmj8hvra9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.drawiin.yourfavoritemovies",
+            "certificate_hash": "59ca589e3ccb26e2f1002a98a26d806f26640334"
+          }
+        },
         {
           "client_id": "690220572830-snka0oe8sidbka56iknr4j524j9vjaa6.apps.googleusercontent.com",
           "client_type": 3
