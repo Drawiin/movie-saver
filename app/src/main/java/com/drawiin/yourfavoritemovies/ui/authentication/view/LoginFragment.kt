@@ -23,9 +23,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -45,13 +42,7 @@ class LoginFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-
-                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                    handleGoogleSignInResult(task)
-
-            }
+        registerGoogleLogInActivity()
     }
 
     override fun onCreateView(
@@ -116,41 +107,28 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun startGoogleLogIn() {
-        resultLauncher.launch(googleSignInClient.signInIntent)
+    private fun registerGoogleLogInActivity() {
+        resultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            when (result.resultCode) {
+                Activity.RESULT_OK -> {
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                    handleGoogleSignInResult(task)
+                }
+            }
+        }
     }
+
+    private fun startGoogleLogIn() = resultLauncher.launch(googleSignInClient.signInIntent)
+
 
     private fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) = try {
         val account = task.getResult(ApiException::class.java)
-        firebaseAuthWithGoogle(account)
+        viewModel.firebaseAuthWithGoogle(account, requireActivity())
     } catch (e: ApiException) {
         Log.w("GOOGLE_SIGN_IN", "signInResult:failed code=" + e.statusCode)
     }
-
-    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) =
-        account?.idToken?.let { token ->
-            val credential = GoogleAuthProvider.getCredential(token, null)
-            Firebase.auth.signInWithCredential(credential)
-                .addOnCompleteListener(requireActivity()) { task ->
-                    when {
-                        task.isSuccessful -> {
-                            MovieUtil.saveUserId(
-                                requireContext(),
-                                Firebase.auth.currentUser?.uid
-                            )
-                            navigateToHome(true)
-                        }
-                        else -> {
-                            Snackbar.make(
-                                binding.btnGoogle,
-                                "Authentication Failed.",
-                                Snackbar.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-        }
-
 
     private fun showErrorMessage(message: String) {
         Snackbar.make(binding.btLogin, message, Snackbar.LENGTH_LONG).show()
