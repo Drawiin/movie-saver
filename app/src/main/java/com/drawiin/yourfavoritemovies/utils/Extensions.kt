@@ -1,4 +1,4 @@
-package com.drawiin.yourfavoritemovies
+package com.drawiin.yourfavoritemovies.utils
 
 import android.content.Context
 

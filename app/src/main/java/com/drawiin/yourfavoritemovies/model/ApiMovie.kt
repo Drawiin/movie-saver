@@ -3,7 +3,7 @@ package com.drawiin.yourfavoritemovies.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Result(
+data class ApiMovie(
     @SerializedName("adult")
     val adult: Boolean = false,
     @SerializedName("backdrop_path")

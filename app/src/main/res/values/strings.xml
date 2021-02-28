@@ -4,6 +4,8 @@
     <string name="action_favoritos">Favoritos</string>
     <string name="title_activity_login">Entar</string>
     <string name="title_activity_movies">Filmes</string>
+    <string name="facebook_app_id">631288837667607</string>
+    <string name="fb_login_protocol_scheme">fb631288837667607</string>
     <string name="title_activity_movies_popular">Filmes Populares</string>
     <string name="title_activity_register">Registrar</string>
     <string name="title_activity_favorites">Favoritos</string>

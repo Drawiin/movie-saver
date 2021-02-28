@@ -2,6 +2,7 @@ package com.drawiin.yourfavoritemovies.ui.home.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
@@ -10,17 +11,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.firebase.ui.auth.AuthUI
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.snackbar.Snackbar
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentHomeBinding
 import com.drawiin.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
-import com.drawiin.yourfavoritemovies.getDeviceHeight
-import com.drawiin.yourfavoritemovies.getDeviceWidth
-import com.drawiin.yourfavoritemovies.model.Result
-import com.drawiin.yourfavoritemovies.ui.adapter.MovieAdapter
+import com.drawiin.yourfavoritemovies.model.ApiMovie
+import com.drawiin.yourfavoritemovies.ui.adapter.MoviesAdapter
 import com.drawiin.yourfavoritemovies.ui.home.viewmodel.HomeViewModel
+import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
+import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
+import com.firebase.ui.auth.AuthUI
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlin.math.ceil
 
@@ -34,10 +35,8 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private val adapter: MovieAdapter by lazy {
-        MovieAdapter(
-            ArrayList(), this::favoriteMovie
-        )
+    private val adapter: MoviesAdapter by lazy {
+        MoviesAdapter(this::favoriteMovie)
     }
 
     private lateinit var binding: FragmentHomeBinding
@@ -52,6 +51,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    // TODO -> Show OnBackPressedDispatcher
     override fun onResume() {
         super.onResume()
         requireActivity()
@@ -82,70 +82,58 @@ class HomeFragment : Fragment() {
 
         }
 
-    private fun setupUi() {
-        binding.rvMovies.apply {
+    private fun setupUi() = binding.run {
+        rvMovies.apply {
             adapter = this@HomeFragment.adapter
             layoutManager = GridLayoutManager(activity, GRID_SPAN_COUNT)
         }
-        binding.toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.action_favoritos -> {
-                    findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
-                    true
-                }
-                R.id.action_logout -> {
-                    logout()
-                    true
-                }
-                else -> false
-            }
-        }
+        toolbar.setOnMenuItemClickListener { onMenuItemClicked(it) }
 
-        binding.appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset: Int ->
+        appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset: Int ->
             isAppBarExpanded = verticalOffset == 0
         })
     }
 
-    private fun subscribeUi() {
-        viewModel.stateList.observe(viewLifecycleOwner) { state ->
-            state?.let {
-                showListMovies(it as MutableList<Result>)
-            }
+    private fun onMenuItemClicked(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.action_favoritos -> {
+            findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
+            true
+        }
+        R.id.action_logout -> {
+            logout()
+            true
+        }
+        else -> false
+    }
+
+    private fun subscribeUi() = viewModel.run {
+        stateList.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let(adapter::submitList)
         }
 
-        viewModel.stateFavorite.observe(viewLifecycleOwner) { favorite ->
-            favorite?.let {
-                showFavoriteMessage(it)
-            }
+        stateFavorite.observe(viewLifecycleOwner) { it.let(::showFavoriteMessage) }
+
+        loading.observe(viewLifecycleOwner) {
+            it?.let(::showLoading)
         }
 
-        viewModel.loading.observe(viewLifecycleOwner) { loading ->
-            loading?.let {
-                showLoading(it)
-            }
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { loading ->
-            loading?.getContentIfNotHandled()?.let {
+        error.observe(viewLifecycleOwner) { error ->
+            error?.getContentIfNotHandled()?.let {
                 showErrorMessage(it)
             }
         }
     }
 
-    private fun showListMovies(list: MutableList<Result>) {
-        adapter.updateList(list)
-    }
-
-    private fun showFavoriteMessage(result: Result) {
+    private fun showFavoriteMessage(apiMovie: ApiMovie) {
         Snackbar.make(
             binding.rvMovies,
-            "Filme ${result.title} adicionado com sucesso",
+            "Filme ${apiMovie.title} adicionado com sucesso",
             Snackbar.LENGTH_LONG
         )
     }
 
-    private fun favoriteMovie(result: Result) {
-        viewModel.saveFavorite(result)
+    private fun favoriteMovie(apiMovie: ApiMovie) {
+        viewModel.saveFavorite(apiMovie)
     }
 
     private fun showLoading(status: Boolean) {

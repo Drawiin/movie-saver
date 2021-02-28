@@ -17,7 +17,13 @@ import androidx.navigation.fragment.findNavController
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentLoginBinding
 import com.drawiin.yourfavoritemovies.ui.authentication.viewmodel.AuthenticationViewModel
+import com.drawiin.yourfavoritemovies.ui.authentication.viewmodel.AuthenticationViewModel.Companion.TAG
 import com.drawiin.yourfavoritemovies.utils.MovieUtil
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
@@ -39,10 +45,13 @@ class LoginFragment : Fragment() {
     }
 
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var callbackManager: CallbackManager
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         registerGoogleLogInActivity()
+        callbackManager = CallbackManager.Factory.create()
+
     }
 
     override fun onCreateView(
@@ -58,6 +67,11 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
         subscribeUi()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun setupUi() {
@@ -78,6 +92,10 @@ class LoginFragment : Fragment() {
 
             btnGoogle.setOnClickListener {
                 startGoogleLogIn()
+            }
+
+            btnFacebook.setOnClickListener {
+                startFacebookLogin()
             }
         }
         viewModel.loadLoggedUser()
@@ -130,7 +148,30 @@ class LoginFragment : Fragment() {
         Log.w("GOOGLE_SIGN_IN", "signInResult:failed code=" + e.statusCode)
     }
 
+    private fun startFacebookLogin() = LoginManager.getInstance().run {
+        logInWithReadPermissions(this@LoginFragment, listOf("email", "public_profile"))
+        registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                Log.d(TAG, "facebook:onSuccess:$loginResult")
+                viewModel.firebaseAuthWithFacebook(loginResult.accessToken)
+
+            }
+
+            override fun onCancel() {
+                Log.d(TAG, "facebook:onCancel")
+            }
+
+            override fun onError(error: FacebookException) {
+                Log.d(TAG, "facebook:onError", error)
+            }
+
+        })
+    }
+
+
     private fun showErrorMessage(message: String) {
         Snackbar.make(binding.btLogin, message, Snackbar.LENGTH_LONG).show()
     }
+
+
 }

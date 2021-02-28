@@ -8,15 +8,15 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.drawiin.yourfavoritemovies.model.Result
+import com.drawiin.yourfavoritemovies.model.ApiMovie
 import com.drawiin.yourfavoritemovies.utils.Constants
 import com.drawiin.yourfavoritemovies.utils.Constants.ID_PATH
 import com.drawiin.yourfavoritemovies.utils.MovieUtil
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
 
-    var stateRemoveFavorite: MutableLiveData<Result> = MutableLiveData()
-    var stateList: MutableLiveData<List<Result>> = MutableLiveData()
+    var stateRemoveFavorite: MutableLiveData<ApiMovie> = MutableLiveData()
+    var stateList: MutableLiveData<List<ApiMovie>> = MutableLiveData()
     var loading: MutableLiveData<Boolean> = MutableLiveData()
 
     private val favoritesPath by lazy {
@@ -37,9 +37,9 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
         addValueEventListener(loadValueListener())
     }
 
-    fun removeFavorite(result: Result) = databaseRef.run {
+    fun removeFavorite(apiMovie: ApiMovie) = databaseRef.run {
         orderByChild(ID_PATH)
-        addListenerForSingleValueEvent(removeValueListener(result))
+        addListenerForSingleValueEvent(removeValueListener(apiMovie))
     }
 
     private fun loadValueListener() = object : ValueEventListener {
@@ -47,22 +47,22 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
 
         override fun onDataChange(snapshot: DataSnapshot) = stateList.run {
             value = snapshot.children.mapNotNull { result ->
-                result.getValue(Result::class.java)
+                result.getValue(ApiMovie::class.java)
             }.toList()
             loading.value = false
         }
     }
 
-    private fun removeValueListener(result: Result) = object : ValueEventListener {
+    private fun removeValueListener(apiMovie: ApiMovie) = object : ValueEventListener {
         override fun onCancelled(error: DatabaseError) {}
 
         override fun onDataChange(snapshot: DataSnapshot) = snapshot.children.forEach { value ->
-            value.getValue(Result::class.java)?.id?.let { id ->
-                if (id == result.id)
+            value.getValue(ApiMovie::class.java)?.id?.let { id ->
+                if (id == apiMovie.id)
                 when (id) {
-                    result.id -> {
+                    apiMovie.id -> {
                         value.ref.removeValue()
-                        stateRemoveFavorite.value = result
+                        stateRemoveFavorite.value = apiMovie
                     }
                 }
             }

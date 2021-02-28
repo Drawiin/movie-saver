@@ -1,5 +1,6 @@
-package com.drawiin.yourfavoritemovies
+package com.drawiin.yourfavoritemovies.services
 
+import com.drawiin.yourfavoritemovies.BuildConfig
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

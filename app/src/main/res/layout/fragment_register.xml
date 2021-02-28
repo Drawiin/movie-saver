@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_24"
                 android:layout_marginStart="@dimen/margin_24"
-                android:layout_marginTop="140dp"
+                android:layout_marginTop="@dimen/spacing_double"
                 android:layout_marginEnd="@dimen/margin_24"
                 android:layout_marginBottom="@dimen/spacing_half"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -50,7 +50,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etv_name_register"
-                app:startIconDrawable="@drawable/ic_baseline_person_outline">
+                app:startIconDrawable="@drawable/ic_outline_alternate_email">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:textColor="@color/white"
@@ -77,7 +77,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etv_email_register"
-                app:startIconDrawable="@drawable/ic_baseline_person_outline">
+                app:startIconDrawable="@drawable/ic_outline_lock">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:textColor="@color/white"
@@ -104,6 +104,73 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etv_password_register" />
 
+            <LinearLayout
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginVertical="@dimen/spacing_double"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_register">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0.7dp"
+                    android:layout_weight="1"
+                    android:background="@color/white" />
+
+                <TextView
+                    style="@style/TitleTextLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_4"
+                    android:text="Ou"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0.7dp"
+
+
+                    android:layout_weight="1"
+                    android:background="@color/white" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_google"
+                style="@style/ButtonOutlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_24"
+                android:layout_marginTop="@dimen/spacing_double"
+                android:text="@string/continue_with_google"
+                app:icon="@drawable/fui_ic_googleg_color_24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/spacing_default"
+                app:iconTint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/separator" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_facebook"
+                style="@style/ButtonOutlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_24"
+                android:text="@string/continue_with_facebook"
+                app:icon="@drawable/ic_baseline_facebook_24"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/spacing_default"
+                app:iconSize="28dp"
+                app:iconTint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_google" />
+
             <TextView
                 android:id="@+id/button_go_to_login"
                 android:layout_width="wrap_content"
@@ -112,9 +179,10 @@
                 android:text="@string/login"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="@dimen/spacing_double"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_register" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <ProgressBar
                 android:id="@+id/pb_register"

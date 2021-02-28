@@ -2,14 +2,17 @@ package com.drawiin.yourfavoritemovies.ui.authentication.viewmodel
 
 import android.app.Activity
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.utils.MovieUtil
+import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -60,6 +63,28 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
             }
     }
 
+    fun firebaseAuthWithFacebook(token: AccessToken) {
+        Log.d(TAG, "handleFacebookAccessToken:$token")
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        auth.signInWithCredential(credential).addOnCompleteListener { task ->
+            when {
+                task.isSuccessful -> {
+                    Log.d(TAG, "signInWithCredential:success")
+                    val user = auth.currentUser
+                    MovieUtil.saveUserId(getApplication(), user?.uid)
+                    stateLogin.value = true
+                    stateRegister.value = true
+                }
+                else -> {
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    errorMessage()
+                }
+            }
+        }
+
+
+    }
+
 
     private fun onGoogleLoginSuccess(uid: String?) {
         MovieUtil.saveUserId(getApplication(), uid)
@@ -92,5 +117,9 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
             MovieUtil.saveUserId(getApplication(), user.uid)
             stateLogin.value = true
         }
+    }
+
+    companion object {
+        const val TAG = "FACEBOOK_TAG"
     }
 }

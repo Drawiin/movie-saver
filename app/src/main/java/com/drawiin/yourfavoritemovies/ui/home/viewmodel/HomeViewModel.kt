@@ -4,30 +4,29 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.drawiin.yourfavoritemovies.model.ApiMovie
+import com.drawiin.yourfavoritemovies.model.SingleLiveEvent
+import com.drawiin.yourfavoritemovies.repository.MovieRepository
+import com.drawiin.yourfavoritemovies.utils.Constants
+import com.drawiin.yourfavoritemovies.utils.Constants.FAVORITES_PATH
+import com.drawiin.yourfavoritemovies.utils.MovieUtil
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.drawiin.yourfavoritemovies.MovieRepository
-import com.drawiin.yourfavoritemovies.model.SingleLiveEvent
-import com.drawiin.yourfavoritemovies.model.Result
-import com.drawiin.yourfavoritemovies.utils.Constants
-import com.drawiin.yourfavoritemovies.utils.Constants.FAVORITES_PATH
-import com.drawiin.yourfavoritemovies.utils.MovieUtil
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = MovieRepository()
+    private val repository =
+        MovieRepository()
 
-    var stateList: MutableLiveData<List<Result>> = MutableLiveData()
+    var stateList: MutableLiveData<SingleLiveEvent<List<ApiMovie>>> = MutableLiveData()
     var error: MutableLiveData<SingleLiveEvent<String>> = MutableLiveData()
     var loading: MutableLiveData<Boolean> = MutableLiveData()
-    var stateFavorite: MutableLiveData<Result> = MutableLiveData()
+    var stateFavorite: MutableLiveData<ApiMovie> = MutableLiveData()
 
     private val path by lazy {
         MovieUtil.getUserId(getApplication()).toString() + FAVORITES_PATH
@@ -42,20 +41,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun saveFavorite(result: Result) = databaseRef.apply {
+    fun saveFavorite(apiMovie: ApiMovie) = databaseRef.apply {
         orderByKey()
-        addListenerForSingleValueEvent(getSaveFavoriteListener(result))
+        addListenerForSingleValueEvent(getSaveFavoriteListener(apiMovie))
     }
 
     private fun getListMovies(language: String) = viewModelScope.launch {
         loading.value = true
-        delay(1000L) // TODO - For Better Showing The Animation
+        delay(3000L)
         try {
-            val movieResult = withContext(Dispatchers.IO) {
-                repository.getMovies(language)
-            }
-            stateList.value = movieResult.results
-            loading.value = false
+            stateList.value = SingleLiveEvent(repository.getMovies(language))
         } catch (ex: Exception) {
             errorMessage("It looks like we had a problem. Try later!")
         } finally {
@@ -63,21 +58,21 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun saveMovieFavorite(result: Result) = databaseRef.push().key?.let { key ->
+    private fun saveMovieFavorite(apiMovie: ApiMovie) = databaseRef.push().key?.let { key ->
         databaseRef.child(key).apply {
-            setValue(result)
+            setValue(apiMovie)
             addListenerForSingleValueEvent(getSaveFavoriteMovieListener())
         }
 
     }
 
-    private fun getSaveFavoriteListener(result: Result) = object : ValueEventListener {
+    private fun getSaveFavoriteListener(apiMovie: ApiMovie) = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             var movieAdded = false
             snapshot.children.forEach { snapResult ->
-                snapResult.getValue(Result::class.java)?.id?.let { id ->
+                snapResult.getValue(ApiMovie::class.java)?.id?.let { id ->
                     when (id) {
-                        result.id -> {
+                        apiMovie.id -> {
                             movieAdded = true
                         }
                     }
@@ -89,7 +84,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     errorMessage("O Filme já foi adicionado")
                 }
                 else -> {
-                    saveMovieFavorite(result)
+                    saveMovieFavorite(apiMovie)
                 }
             }
         }
@@ -103,7 +98,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         override fun onDataChange(snapshot: DataSnapshot) {
-            stateFavorite.value = snapshot.getValue(Result::class.java)
+            stateFavorite.value = snapshot.getValue(ApiMovie::class.java)
         }
 
     }
