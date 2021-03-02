@@ -90,6 +90,7 @@
                     android:selectAllOnFocus="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
+
             <Button
                 android:id="@+id/btn_register"
                 style="@style/ButtonFilled"
@@ -103,6 +104,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etv_password_register" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/register_progress"
+                android:layout_width="wrap_content"
+                android:visibility="invisible"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:indicatorColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/btn_register"
+                app:layout_constraintEnd_toEndOf="@id/btn_register"
+                app:layout_constraintStart_toStartOf="@id/btn_register"
+                app:layout_constraintTop_toTopOf="@id/btn_register"
+                app:trackThickness="2dp" />
 
             <LinearLayout
                 android:id="@+id/separator"
@@ -184,18 +198,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <ProgressBar
-                android:id="@+id/pb_register"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_8"
-                android:layout_marginEnd="@dimen/margin_8"
-                android:layout_marginBottom="@dimen/margin_8"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

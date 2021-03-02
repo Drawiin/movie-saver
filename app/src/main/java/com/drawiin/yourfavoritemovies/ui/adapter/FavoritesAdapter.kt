@@ -1,10 +1,8 @@
 package com.drawiin.yourfavoritemovies.ui.adapter
 
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.model.ApiMovie
 
 class FavoritesAdapter(
@@ -14,13 +12,6 @@ class FavoritesAdapter(
         getItem(position)?.let { movie ->
             holder.onBind(movie)
             holder.favorite.setOnClickListener {
-                holder.favorite.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        holder.itemView.resources,
-                        R.drawable.ic_favorite,
-                        null
-                    )
-                )
                 onClick(movie)
             }
         }

@@ -8,26 +8,28 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.snackbar.Snackbar
+import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentFavoritesBinding
 import com.drawiin.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
+import com.drawiin.yourfavoritemovies.model.ApiMovie
+import com.drawiin.yourfavoritemovies.ui.adapter.FavoritesAdapter
+import com.drawiin.yourfavoritemovies.ui.favorites.viewmodel.FavoriteViewModel
 import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
 import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
-import com.drawiin.yourfavoritemovies.model.ApiMovie
-import com.drawiin.yourfavoritemovies.ui.favorites.viewmodel.FavoriteViewModel
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
+import com.google.android.material.snackbar.Snackbar
 import kotlin.math.ceil
 
 class FavoritesFragment : Fragment() {
     private var resultRemove = ApiMovie()
     private var isAppBarExpanded = true
 
-//    private val adapter: MovieAdapter by lazy {
-//        MovieAdapter(
-//            ArrayList(), this::removeFavoriteMovie
-//        )
-//    }
+    private val adapter: FavoritesAdapter by lazy {
+        FavoritesAdapter(
+            this::removeFavoriteMovie
+        )
+    }
 
     private val viewModel: FavoriteViewModel by lazy {
         ViewModelProvider(this).get(
@@ -76,10 +78,10 @@ class FavoritesFragment : Fragment() {
         }
 
     private fun setupUi() {
-//        binding.rvMoviesFavorites.apply {
-//            adapter = this@FavoritesFragment.adapter
-//            layoutManager = GridLayoutManager(context, 3)
-//        }
+        binding.rvMoviesFavorites.apply {
+            adapter = this@FavoritesFragment.adapter
+            layoutManager = GridLayoutManager(context, 3)
+        }
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
@@ -91,7 +93,7 @@ class FavoritesFragment : Fragment() {
     private fun subscribeUi() {
         viewModel.stateList.observe(viewLifecycleOwner) { favorites ->
             favorites?.let {
-//                showListFavorites(it as MutableList<ApiMovie>)
+                showListFavorites(it as MutableList<ApiMovie>)
             }
         }
 
@@ -111,10 +113,7 @@ class FavoritesFragment : Fragment() {
     }
 
 
-//    private fun showListFavorites(list: MutableList<ApiMovie>) {
-//        adapter.removeItem(resultRemove)
-//        adapter.updateList(list)
-//    }
+    private fun showListFavorites(list: MutableList<ApiMovie>) = adapter.submitList(list)
 
     private fun showMessageRemovedFavorite(apiMovie: ApiMovie) {
         resultRemove = apiMovie

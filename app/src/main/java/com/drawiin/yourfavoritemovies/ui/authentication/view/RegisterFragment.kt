@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -28,6 +29,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 
 class RegisterFragment : Fragment() {
@@ -100,9 +102,9 @@ class RegisterFragment : Fragment() {
             }
         }
 
-        viewModel.loading.observe(viewLifecycleOwner) { loading ->
+        viewModel.passwordLoading.observe(viewLifecycleOwner) { loading ->
             loading?.let {
-                showLoading(loading)
+                showRegisterLoading(loading)
             }
         }
 
@@ -168,14 +170,24 @@ class RegisterFragment : Fragment() {
         Snackbar.make(binding.btnRegister, message, Snackbar.LENGTH_LONG).show()
     }
 
-    private fun showLoading(status: Boolean) {
+    private fun showRegisterLoading(status: Boolean) {
         when {
             status -> {
-                binding.pbRegister.visibility = View.VISIBLE
+                showButtonLoading(binding.btnRegister, binding.registerProgress)
             }
             else -> {
-                binding.pbRegister.visibility = View.GONE
+                hideButtonLoading(binding.btnRegister, binding.registerProgress)
             }
         }
+    }
+
+    private fun showButtonLoading(button: Button, progress: CircularProgressIndicator) {
+        progress.show()
+        button.text = ""
+    }
+
+    private fun hideButtonLoading(button: Button, progress: CircularProgressIndicator) {
+        progress.hide()
+        button.alpha = 1.0f
     }
 }

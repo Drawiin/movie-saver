@@ -19,7 +19,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class AuthenticationViewModel(application: Application) : AndroidViewModel(application) {
-    val loading: MutableLiveData<Boolean> = MutableLiveData()
+    val passwordLoading: MutableLiveData<Boolean> = MutableLiveData()
+    val googleLoading: MutableLiveData<Boolean> = MutableLiveData()
+    val facebookLoading: MutableLiveData<Boolean> = MutableLiveData()
+
     val error: MutableLiveData<String> = MutableLiveData()
     val stateRegister: MutableLiveData<Boolean> = MutableLiveData()
     val stateLogin: MutableLiveData<Boolean> = MutableLiveData()
@@ -37,14 +40,30 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
         }.build()
     }
 
+    private fun startGoogleLogin() {
+        googleLoading.value = true
+    }
+
+    private fun finishGoogleLogin() {
+        googleLoading.value = false
+    }
+
+    private fun startFacebookLogin() {
+        facebookLoading.value = true
+    }
+
+    private fun finishFacebookLogin() {
+        facebookLoading.value = false
+    }
+
     fun registerUser(email: String, password: String) = auth.run {
-        loading.value = true
+        passwordLoading.value = true
         createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task -> onAuthComplete(task) }
     }
 
     fun logInUser(email: String, password: String) = auth.run {
-        loading.value = true
+        passwordLoading.value = true
         signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task -> onAuthComplete(task) }
     }
@@ -93,7 +112,7 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
     }
 
     private fun onAuthComplete(task: Task<AuthResult>) {
-        loading.value = false
+        passwordLoading.value = false
         when {
             task.isSuccessful -> {
                 MovieUtil.saveUserId(getApplication(), auth.currentUser?.uid)
