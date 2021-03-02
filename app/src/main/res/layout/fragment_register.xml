@@ -169,6 +169,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/separator" />
 
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/google_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                app:indicatorColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/btn_google"
+                app:layout_constraintEnd_toEndOf="@id/btn_google"
+                app:layout_constraintStart_toStartOf="@id/btn_google"
+                app:layout_constraintTop_toTopOf="@id/btn_google"
+                app:trackThickness="2dp" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_facebook"
                 style="@style/ButtonOutlined"

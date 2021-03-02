@@ -29,6 +29,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 
@@ -108,6 +109,12 @@ class RegisterFragment : Fragment() {
             }
         }
 
+        viewModel.googleLoading.observe(viewLifecycleOwner) { loading ->
+            loading?.let {
+                showGoogleLoading(loading)
+            }
+        }
+
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
                 showErrorMessage(error)
@@ -137,7 +144,10 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun startGoogleLogIn() = resultLauncher.launch(googleSignInClient.signInIntent)
+    private fun startGoogleLogIn() {
+        viewModel.startGoogleLogin()
+        resultLauncher.launch(googleSignInClient.signInIntent)
+    }
 
     private fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) = try {
         val account = task.getResult(ApiException::class.java)
@@ -181,9 +191,23 @@ class RegisterFragment : Fragment() {
         }
     }
 
+    private fun showGoogleLoading(status: Boolean) {
+        when {
+            status -> {
+                showButtonLoading(binding.btnGoogle, binding.googleProgress)
+            }
+            else -> {
+                hideButtonLoading(binding.btnGoogle, binding.googleProgress)
+            }
+        }
+    }
+
     private fun showButtonLoading(button: Button, progress: CircularProgressIndicator) {
         progress.show()
         button.text = ""
+        if (button is MaterialButton) {
+            button.icon = null
+        }
     }
 
     private fun hideButtonLoading(button: Button, progress: CircularProgressIndicator) {

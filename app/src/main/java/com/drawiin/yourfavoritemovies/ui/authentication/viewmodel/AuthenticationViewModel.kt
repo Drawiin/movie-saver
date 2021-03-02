@@ -40,19 +40,19 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
         }.build()
     }
 
-    private fun startGoogleLogin() {
+    fun startGoogleLogin() {
         googleLoading.value = true
     }
 
-    private fun finishGoogleLogin() {
+    fun finishGoogleLogin() {
         googleLoading.value = false
     }
 
-    private fun startFacebookLogin() {
+    fun startFacebookLogin() {
         facebookLoading.value = true
     }
 
-    private fun finishFacebookLogin() {
+    fun finishFacebookLogin() {
         facebookLoading.value = false
     }
 
