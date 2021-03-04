@@ -1,18 +1,40 @@
-# Workshop 
+<h1 align="center">
+    Movies Saver (sério não consegui pensar em um nome melhor)
+</h1>
 
-### Título: Implementando autenticação e banco de dados utilizando Firebase na sua aplicação Android
+<p align="center">
+  <a href="#rocket-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#memo-licença">Licença</a>
+</p>
 
-Projeto desenvolvido para realização do workshop da [Rocketseat](https://rocketseat.com.br/) no evento [DoWhile2020](https://dowhile.rocketseat.com.br/inscricao?utm_source=google&utm_medium=cpc&utm_term=00+Rocketseat&gclid=CjwKCAiA5IL-BRAzEiwA0lcWYoZ53ALYSmcMpTBUrrX8IH43Rcu_77LiSRX8wGPa7eQ7sqRUVnAY9RoCLGcQAvD_BwE).
+<br>
 
-A partir de uma aplicação utilizando:
-- MVVM;
-- Kotlin;
-- Coroutines;
-- API: [TMDB](https://developers.themoviedb.org/3/getting-started)
+<p align="center">
+  <img alt="Banner" src=".github/img.png" width="100%">
+</p>
 
-A proposta do projeto é uma aplicação onde o usuário pode realizar um cadastro, logar no aplicativo e salvar seus filmes favoritos.
+## :rocket: Tecnologias
 
-Para realização das funcionalidades de registro e login foi implementado o uso do [Firebase Authentication](https://firebase.google.com/docs/auth?hl=pt-br)
-e para salvar os filmes favoritos foi utilizado o [Realtime Database](https://firebase.google.com/docs/database?hl=pt-br)
+Esse projeto foi desenvolvido com as seguintes tecnologias:
 
-O resultado final do código pode ser encontrado no seguinte repositório [FavoriteMovie](https://github.com/jeehmilena/FavoriteMovie)
+- [Android](https://developer.android.com/studio)
+- [Kotlin](https://developer.android.com/kotlin)
+- [Facebook Shimmer](https://github.com/facebook/shimmer-android)
+- [Jetpack Navigation](https://developer.android.com/jetpack/androidx/releases/navigation)
+- [Material Design Components](https://material.io/components)
+- [Retrofit](https://square.github.io/retrofit/g)
+- [Data Binding](https://developer.android.com/topic/libraries/data-binding)
+- [Archtecture Components](https://developer.android.com/topic/libraries/architecture)
+
+## 💻 Projeto
+
+Movies saver é uma app de filmes em que você pode ver o que há de popular e salvar nos seus favoritos, e acessar de onde quiser(pelo app claro).
+
+## :memo: Licença
+
+Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
+
+---
+
+Feito com ♥ by Vinicius :wave:
