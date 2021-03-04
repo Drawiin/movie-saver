@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -47,6 +48,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun getListMovies(language: String) = viewModelScope.launch {
         loading.value = true
+        delay(2000L)
         try {
             stateList.value = SingleLiveEvent(repository.getMovies(language))
         } catch (ex: Exception) {
