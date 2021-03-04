@@ -46,9 +46,10 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
         override fun onCancelled(error: DatabaseError) {}
 
         override fun onDataChange(snapshot: DataSnapshot) = stateList.run {
-            value = snapshot.children.mapNotNull { result ->
+            val retrieved = snapshot.children.mapNotNull { result ->
                 result.getValue(ApiMovie::class.java)
             }.toList()
+            if (!retrieved.isNullOrEmpty()) value = retrieved
             loading.value = false
         }
     }

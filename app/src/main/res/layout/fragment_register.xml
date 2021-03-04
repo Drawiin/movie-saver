@@ -1,7 +1,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.authentication.view.LoginFragment">
+    tools:context=".ui.authentication.view.RegisterFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -40,6 +40,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:transitionName="layout_email"
                 android:id="@+id/etv_email_register"
                 style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
@@ -66,8 +67,8 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
+                android:transitionName="layout_password"
                 android:id="@+id/etv_password_register"
-
                 style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -92,6 +93,7 @@
 
 
             <Button
+                android:transitionName="btn_action"
                 android:id="@+id/btn_register"
                 style="@style/ButtonFilled"
                 android:layout_width="match_parent"
@@ -119,6 +121,7 @@
                 app:trackThickness="2dp" />
 
             <LinearLayout
+                android:transitionName="separator"
                 android:id="@+id/separator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,6 +157,7 @@
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
+                android:transitionName="btn_google"
                 android:id="@+id/btn_google"
                 style="@style/ButtonOutlined"
                 android:layout_width="match_parent"
@@ -183,6 +187,7 @@
                 app:trackThickness="2dp" />
 
             <com.google.android.material.button.MaterialButton
+                android:transitionName="btn_facebook"
                 android:id="@+id/btn_facebook"
                 style="@style/ButtonOutlined"
                 android:layout_width="match_parent"
@@ -198,18 +203,47 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_google" />
 
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/facebook_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="invisible"
+                app:indicatorColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/btn_facebook"
+                app:layout_constraintEnd_toEndOf="@id/btn_facebook"
+                app:layout_constraintStart_toStartOf="@id/btn_facebook"
+                app:layout_constraintTop_toTopOf="@id/btn_facebook"
+                app:trackThickness="2dp" />
+
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_thin"
+                android:text="@string/have_account"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@id/button_go_to_login"
+                app:layout_constraintEnd_toEndOf="@id/button_go_to_login"
+                app:layout_constraintStart_toStartOf="@id/button_go_to_login" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:id="@+id/button_go_to_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
+                android:layout_marginBottom="@dimen/spacing_double"
+                android:fontFamily="@font/roboto_light"
+                android:letterSpacing="0.02"
+                android:minHeight="0dp"
                 android:text="@string/login"
                 android:textColor="@color/white"
-                android:textSize="16sp"
-                android:layout_marginBottom="@dimen/spacing_double"
-                app:layout_constraintStart_toStartOf="parent"
+                android:paddingTop="0dp"
+                android:textAllCaps="false"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

@@ -11,10 +11,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import androidx.transition.TransitionInflater
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentRegisterBinding
 import com.drawiin.yourfavoritemovies.ui.authentication.viewmodel.AuthenticationViewModel
@@ -54,6 +56,12 @@ class RegisterFragment : Fragment() {
         super.onAttach(context)
         registerGoogleLogInActivity()
         callbackManager = CallbackManager.Factory.create()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
     }
 
     override fun onCreateView(
@@ -115,6 +123,12 @@ class RegisterFragment : Fragment() {
             }
         }
 
+        viewModel.facebookLoading.observe(viewLifecycleOwner) { loading ->
+            loading?.let {
+                showFacebookLoading(loading)
+            }
+        }
+
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
                 showErrorMessage(error)
@@ -140,12 +154,15 @@ class RegisterFragment : Fragment() {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                     handleGoogleSignInResult(task)
                 }
+                else -> {
+                    viewModel.hideGoogleLoading()
+                }
             }
         }
     }
 
     private fun startGoogleLogIn() {
-        viewModel.startGoogleLogin()
+        viewModel.showGoogleLoading()
         resultLauncher.launch(googleSignInClient.signInIntent)
     }
 
@@ -154,9 +171,11 @@ class RegisterFragment : Fragment() {
         viewModel.firebaseAuthWithGoogle(account, requireActivity())
     } catch (e: ApiException) {
         Log.w("GOOGLE_SIGN_IN", "signInResult:failed code=" + e.statusCode)
+        viewModel.hideGoogleLoading()
     }
 
     private fun startFacebookLogin() = LoginManager.getInstance().run {
+        viewModel.showFacebookLoading()
         logInWithReadPermissions(this@RegisterFragment, listOf("email", "public_profile"))
         registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
@@ -166,11 +185,11 @@ class RegisterFragment : Fragment() {
             }
 
             override fun onCancel() {
-                Log.d(TAG, "facebook:onCancel")
+                viewModel.hideFacebookLoading()
             }
 
             override fun onError(error: FacebookException) {
-                Log.d(TAG, "facebook:onError", error)
+                viewModel.hideFacebookLoading()
             }
 
         })
@@ -186,7 +205,11 @@ class RegisterFragment : Fragment() {
                 showButtonLoading(binding.btnRegister, binding.registerProgress)
             }
             else -> {
-                hideButtonLoading(binding.btnRegister, binding.registerProgress)
+                hideButtonLoading(
+                    binding.btnRegister,
+                    binding.registerProgress,
+                    getString(R.string.register)
+                )
             }
         }
     }
@@ -197,7 +220,28 @@ class RegisterFragment : Fragment() {
                 showButtonLoading(binding.btnGoogle, binding.googleProgress)
             }
             else -> {
-                hideButtonLoading(binding.btnGoogle, binding.googleProgress)
+                hideButtonLoading(
+                    binding.btnGoogle,
+                    binding.googleProgress,
+                    getString(R.string.continue_with_google),
+                    R.drawable.fui_ic_googleg_color_24dp
+                )
+            }
+        }
+    }
+
+    private fun showFacebookLoading(status: Boolean) {
+        when {
+            status -> {
+                showButtonLoading(binding.btnFacebook, binding.facebookProgress)
+            }
+            else -> {
+                hideButtonLoading(
+                    binding.btnFacebook,
+                    binding.facebookProgress,
+                    getString(R.string.continue_with_facebook),
+                    R.drawable.ic_baseline_facebook_24
+                )
             }
         }
     }
@@ -210,8 +254,17 @@ class RegisterFragment : Fragment() {
         }
     }
 
-    private fun hideButtonLoading(button: Button, progress: CircularProgressIndicator) {
+    private fun hideButtonLoading(
+        button: Button,
+        progress: CircularProgressIndicator,
+        text: String,
+        drawable: Int? = null
+    ) {
         progress.hide()
         button.alpha = 1.0f
+        button.text = text
+        if (button is MaterialButton && drawable != null) {
+            button.icon = ResourcesCompat.getDrawable(requireContext().resources, drawable, null)
+        }
     }
 }

@@ -18,6 +18,7 @@
         tools:targetApi="m">
         <activity
             android:name="com.drawiin.yourfavoritemovies.ui.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +29,7 @@
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"

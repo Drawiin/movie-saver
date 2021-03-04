@@ -25,5 +25,7 @@
     <string name="login">Entrar</string>
     <string name="continue_with_google">Continuar com Google</string>
     <string name="continue_with_facebook">Continuar com Facebook</string>
+    <string name="have_account">Já tem conta ?</string>
+    <string name="dont_have_account">Ainda não tem conta ?</string>
 
 </resources>

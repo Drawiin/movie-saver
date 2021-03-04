@@ -40,19 +40,19 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
         }.build()
     }
 
-    fun startGoogleLogin() {
+    fun showGoogleLoading() {
         googleLoading.value = true
     }
 
-    fun finishGoogleLogin() {
+    fun hideGoogleLoading() {
         googleLoading.value = false
     }
 
-    fun startFacebookLogin() {
+    fun showFacebookLoading() {
         facebookLoading.value = true
     }
 
-    fun finishFacebookLogin() {
+    fun hideFacebookLoading() {
         facebookLoading.value = false
     }
 
@@ -76,8 +76,13 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
         auth.signInWithCredential(credential)
             .addOnCompleteListener(activity) { task ->
                 when {
-                    task.isSuccessful -> onGoogleLoginSuccess(auth.currentUser?.uid)
-                    else -> errorMessage()
+                    task.isSuccessful -> {
+                        onGoogleLoginSuccess(auth.currentUser?.uid)
+                    }
+                    else -> {
+                        hideGoogleLoading()
+                        errorMessage()
+                    }
                 }
             }
     }
@@ -93,10 +98,12 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
                     MovieUtil.saveUserId(getApplication(), user?.uid)
                     stateLogin.value = true
                     stateRegister.value = true
+                    hideFacebookLoading()
                 }
                 else -> {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     errorMessage()
+                    hideFacebookLoading()
                 }
             }
         }
@@ -109,6 +116,7 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
         MovieUtil.saveUserId(getApplication(), uid)
         stateLogin.value = true
         stateRegister.value = true
+        hideGoogleLoading()
     }
 
     private fun onAuthComplete(task: Task<AuthResult>) {
