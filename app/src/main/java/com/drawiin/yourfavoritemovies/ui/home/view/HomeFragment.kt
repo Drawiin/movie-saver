@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,7 +16,7 @@ import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentHomeBinding
 import com.drawiin.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
 import com.drawiin.yourfavoritemovies.model.ApiMovie
-import com.drawiin.yourfavoritemovies.ui.adapter.MoviesAdapter
+import com.drawiin.yourfavoritemovies.ui.adapter.PagedMoviesAdapter
 import com.drawiin.yourfavoritemovies.ui.home.viewmodel.HomeViewModel
 import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
 import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
@@ -23,6 +24,8 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlin.math.ceil
 
 
@@ -35,8 +38,8 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private val adapter: MoviesAdapter by lazy {
-        MoviesAdapter(this::favoriteMovie)
+    private val adapter: PagedMoviesAdapter by lazy {
+        PagedMoviesAdapter(this::favoriteMovie)
     }
 
     private lateinit var binding: FragmentHomeBinding
@@ -51,15 +54,14 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    // TODO -> Show OnBackPressedDispatcher
     override fun onResume() {
         super.onResume()
-        requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(
-                viewLifecycleOwner,
-                getOnBackPressedCallback()
-            )
+//        requireActivity()
+//            .onBackPressedDispatcher
+//            .addCallback(
+//                viewLifecycleOwner,
+//                getOnBackPressedCallback()
+//            )
     }
 
 
@@ -69,18 +71,18 @@ class HomeFragment : Fragment() {
         subscribeUi()
     }
 
-    private fun getOnBackPressedCallback() =
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() =
-                if (binding.nestedScroll.scrollY > 0 || !isAppBarExpanded) {
-                    binding.nestedScroll.smoothScrollTo(0, 0)
-                    binding.appbar.setExpanded(true, true)
-                } else {
-                    isEnabled = false
-                    requireActivity().finishAndRemoveTask()
-                }
-
-        }
+//    private fun getOnBackPressedCallback() =
+//        object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() =
+//                if (binding.nestedScroll.scrollY > 0 || !isAppBarExpanded) {
+//                    binding.nestedScroll.smoothScrollTo(0, 0)
+//                    binding.appbar.setExpanded(true, true)
+//                } else {
+//                    isEnabled = false
+//                    requireActivity().finishAndRemoveTask()
+//                }
+//
+//        }
 
     private fun setupUi() = binding.run {
         rvMovies.apply {
@@ -108,7 +110,11 @@ class HomeFragment : Fragment() {
 
     private fun subscribeUi() = viewModel.run {
         stateList.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let(adapter::submitList)
+            it.getContentIfNotHandled()?.let { flow ->
+                this@HomeFragment.lifecycleScope.launch {
+                    flow.collectLatest(adapter::submitData)
+                }
+            }
         }
 
         stateFavorite.observe(viewLifecycleOwner) { it.let(::showFavoriteMessage) }
