@@ -13,8 +13,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.drawiin.yourfavoritemovies.R
@@ -32,17 +32,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
+@AndroidEntryPoint
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
 
-    private val viewModel: AuthenticationViewModel by lazy {
-        ViewModelProvider(this).get(
-            AuthenticationViewModel::class.java
-        )
-    }
+    private val viewModel: AuthenticationViewModel by viewModels()
+
 
     private val googleSignInClient by lazy {
         GoogleSignIn.getClient(requireActivity(), viewModel.googleSignInOptions)
@@ -84,7 +86,7 @@ class RegisterFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun setupUi() = binding.run {
+    private fun setupUi() = with(binding) {
         buttonGoToLogin.setOnClickListener {
             findNavController().popBackStack(R.id.loginFragment2, false)
         }
@@ -101,6 +103,22 @@ class RegisterFragment : Fragment() {
         }
         btnGoogle.setOnClickListener { startGoogleLogIn() }
         btnFacebook.setOnClickListener { startFacebookLogin() }
+        inputBirth.setOnClickListener {
+            val datePicker =
+                MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Data de nascimento")
+                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .build()
+            datePicker.show(childFragmentManager, "Picker")
+            datePicker.addOnPositiveButtonClickListener {
+                val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+                calendar.timeInMillis = it
+                val date = calendar.time
+                val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val result  = formatter.format(date)
+                inputBirth.setText(result)
+            }
+        }
     }
 
 
@@ -140,7 +158,7 @@ class RegisterFragment : Fragment() {
     private fun navigateToHome(status: Boolean) {
         when {
             status -> {
-                findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
+                findNavController().navigate(R.id.action_registerFragment_to_profileFragment)
             }
         }
     }
@@ -155,7 +173,7 @@ class RegisterFragment : Fragment() {
                     handleGoogleSignInResult(task)
                 }
                 else -> {
-                    viewModel.hideGoogleLoading()
+                    viewModel.hideAllLoadings()
                 }
             }
         }
@@ -171,7 +189,7 @@ class RegisterFragment : Fragment() {
         viewModel.firebaseAuthWithGoogle(account, requireActivity())
     } catch (e: ApiException) {
         Log.w("GOOGLE_SIGN_IN", "signInResult:failed code=" + e.statusCode)
-        viewModel.hideGoogleLoading()
+        viewModel.hideAllLoadings()
     }
 
     private fun startFacebookLogin() = LoginManager.getInstance().run {
@@ -185,11 +203,11 @@ class RegisterFragment : Fragment() {
             }
 
             override fun onCancel() {
-                viewModel.hideFacebookLoading()
+                viewModel.hideAllLoadings()
             }
 
             override fun onError(error: FacebookException) {
-                viewModel.hideFacebookLoading()
+                viewModel.hideAllLoadings()
             }
 
         })

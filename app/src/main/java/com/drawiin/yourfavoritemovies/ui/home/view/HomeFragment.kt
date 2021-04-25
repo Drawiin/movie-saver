@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -15,28 +14,27 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentHomeBinding
 import com.drawiin.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
-import com.drawiin.yourfavoritemovies.model.ApiMovie
+import com.drawiin.yourfavoritemovies.domain.models.Movie
 import com.drawiin.yourfavoritemovies.ui.adapter.PagedMoviesAdapter
 import com.drawiin.yourfavoritemovies.ui.home.viewmodel.HomeViewModel
 import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
 import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
-import com.firebase.ui.auth.AuthUI
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.math.ceil
 
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var isAppBarExpanded = true
 
-    private val viewModel: HomeViewModel by lazy {
-        ViewModelProvider(this).get(
-            HomeViewModel::class.java
-        )
-    }
+    private val viewModel: HomeViewModel by viewModels()
 
     private val adapter: PagedMoviesAdapter by lazy {
         PagedMoviesAdapter(this::favoriteMovie)
@@ -102,7 +100,7 @@ class HomeFragment : Fragment() {
             true
         }
         R.id.action_logout -> {
-            logout()
+            exitProfile()
             true
         }
         else -> false
@@ -130,16 +128,16 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showFavoriteMessage(apiMovie: ApiMovie) {
+    private fun showFavoriteMessage(movie: Movie) {
         Snackbar.make(
             binding.rvMovies,
-            "Filme ${apiMovie.title} adicionado com sucesso",
+            "Filme ${movie.title} adicionado com sucesso",
             Snackbar.LENGTH_LONG
         )
     }
 
-    private fun favoriteMovie(apiMovie: ApiMovie) {
-        viewModel.saveFavorite(apiMovie)
+    private fun favoriteMovie(movie: Movie) {
+        viewModel.saveFavorite(movie)
     }
 
     private fun showLoading(status: Boolean) {
@@ -184,12 +182,9 @@ class HomeFragment : Fragment() {
         Snackbar.make(rv_movies, message, Snackbar.LENGTH_LONG).show()
     }
 
-    private fun logout() = context?.let {
-        AuthUI.getInstance()
-            .signOut(it)
-            .addOnCompleteListener {
-                findNavController().navigate(R.id.goToLogin)
-            }
+    private fun exitProfile() = context?.let {
+        Firebase.auth.signOut()
+        findNavController().navigate(R.id.goToLogin)
     }
 
 

@@ -1,7 +1,8 @@
 <resources>
 
     <style name="Theme.YourFavoriteMovies" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
         <item name="colorOnPrimary">@color/smokeWhite</item>
         <item name="colorControlNormal">@color/smokeWhite</item>
         <item name="android:windowBackground">@drawable/background_gradient</item>

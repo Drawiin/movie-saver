@@ -5,6 +5,7 @@ object Constants {
     const val BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w300/"
     const val LANGUAGE_PT_BR = "PT-BR"
     const val FAVORITES_PATH = "/favorites"
+    const val USER_PATH = "/user"
     const val ID_PATH = "id"
     const val APP_KEY = "APP"
     const val UUID_KEY = "UUID"

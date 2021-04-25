@@ -23,4 +23,8 @@
     <color name="googleSignInBlue">#4285F4</color>
     <color name="facebookSignInBlue">#4267b2</color>
 
+    <color name="primaryColor">#2ebf91</color>
+    <color name="primaryLightColor">#6cf2c1</color>
+    <color name="primaryDarkColor">#008e63</color>
+    <color name="primaryTextColor">#ffffff</color>
 </resources>

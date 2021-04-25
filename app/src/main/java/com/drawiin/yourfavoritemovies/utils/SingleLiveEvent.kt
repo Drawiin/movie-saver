@@ -1,4 +1,4 @@
-package com.drawiin.yourfavoritemovies.model
+package com.drawiin.yourfavoritemovies.utils
 
 open class SingleLiveEvent<out T>(private val content: T) {
 
@@ -12,6 +12,4 @@ open class SingleLiveEvent<out T>(private val content: T) {
             hasBeenHandled = true
             content
         }
-
-    fun peekContent(): T = content
 }

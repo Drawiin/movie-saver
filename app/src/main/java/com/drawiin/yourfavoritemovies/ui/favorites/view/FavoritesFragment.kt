@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentFavoritesBinding
 import com.drawiin.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
-import com.drawiin.yourfavoritemovies.model.ApiMovie
+import com.drawiin.yourfavoritemovies.domain.models.Movie
 import com.drawiin.yourfavoritemovies.ui.adapter.FavoritesAdapter
 import com.drawiin.yourfavoritemovies.ui.favorites.viewmodel.FavoriteViewModel
 import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
@@ -22,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlin.math.ceil
 
 class FavoritesFragment : Fragment() {
-    private var resultRemove = ApiMovie()
+    private var resultRemove = Movie()
     private var isAppBarExpanded = true
 
     private val adapter: FavoritesAdapter by lazy {
@@ -93,7 +93,7 @@ class FavoritesFragment : Fragment() {
     private fun subscribeUi() {
         viewModel.stateList.observe(viewLifecycleOwner) { favorites ->
             favorites?.let {
-                showListFavorites(it as MutableList<ApiMovie>)
+                showListFavorites(it as MutableList<Movie>)
             }
         }
 
@@ -108,18 +108,18 @@ class FavoritesFragment : Fragment() {
         }
     }
 
-    private fun removeFavoriteMovie(apiMovie: ApiMovie) {
-        viewModel.removeFavorite(apiMovie)
+    private fun removeFavoriteMovie(movie: Movie) {
+        viewModel.removeFavorite(movie)
     }
 
 
-    private fun showListFavorites(list: MutableList<ApiMovie>) = adapter.submitList(list)
+    private fun showListFavorites(list: MutableList<Movie>) = adapter.submitList(list)
 
-    private fun showMessageRemovedFavorite(apiMovie: ApiMovie) {
-        resultRemove = apiMovie
+    private fun showMessageRemovedFavorite(movie: Movie) {
+        resultRemove = movie
         Snackbar.make(
             binding.rvMoviesFavorites,
-            resources.getString(R.string.removed_movie, apiMovie.title),
+            resources.getString(R.string.removed_movie, movie.title),
             Snackbar.LENGTH_LONG
         ).show()
     }

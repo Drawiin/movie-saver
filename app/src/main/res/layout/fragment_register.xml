@@ -40,6 +40,36 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etv_birth"
+                style="@style/TextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_24"
+                android:layout_marginStart="@dimen/margin_24"
+                android:layout_marginTop="@dimen/margin_16"
+                android:layout_marginEnd="@dimen/margin_24"
+                android:layout_marginBottom="@dimen/spacing_half"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etv_name_register"
+                app:startIconDrawable="@drawable/ic_outline_cake_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:textColor="@color/white"
+                    android:id="@+id/input_birth"
+                    android:fontFamily="@font/roboto_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/birth"
+                    android:cursorVisible="false"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="date"
+                    android:selectAllOnFocus="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:transitionName="layout_email"
                 android:id="@+id/etv_email_register"
                 style="@style/TextInputLayoutStyle"
@@ -50,7 +80,7 @@
                 android:layout_marginEnd="@dimen/margin_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etv_name_register"
+                app:layout_constraintTop_toBottomOf="@id/etv_birth"
                 app:startIconDrawable="@drawable/ic_outline_alternate_email">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -221,6 +251,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_thin"
                 android:text="@string/have_account"
+                android:layout_marginTop="@dimen/spacing_default"
+                app:layout_constraintTop_toBottomOf="@id/btn_facebook"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@id/button_go_to_login"

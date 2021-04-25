@@ -13,8 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.observe
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.drawiin.yourfavoritemovies.R
@@ -34,16 +33,14 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
 
 
-    private val viewModel: AuthenticationViewModel by lazy {
-        ViewModelProvider(this).get(
-            AuthenticationViewModel::class.java
-        )
-    }
+    private val viewModel: AuthenticationViewModel by viewModels()
 
     private val googleSignInClient by lazy {
         GoogleSignIn.getClient(requireActivity(), viewModel.googleSignInOptions)
@@ -80,7 +77,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupUi() {
-        binding.run {
+        with(binding) {
             btLogin.setOnClickListener {
                 val email = inputEmail.text.toString()
                 val password = inputPassword.text.toString()
@@ -112,11 +109,12 @@ class LoginFragment : Fragment() {
                 startGoogleLogIn()
             }
 
+
             btnFacebook.setOnClickListener {
                 startFacebookLogin()
             }
         }
-        viewModel.loadLoggedUser()
+        viewModel.loadCurrentUser()
     }
 
 
@@ -140,7 +138,7 @@ class LoginFragment : Fragment() {
         }
 
         viewModel.stateLogin.observe(viewLifecycleOwner) { state ->
-            state?.let {
+            state?.getContentIfNotHandled()?.let {
                 navigateToHome(it)
             }
         }
@@ -156,13 +154,11 @@ class LoginFragment : Fragment() {
         if (!status) return
         when {
             status -> {
-                findNavController().navigate(R.id.action_loginFragment2_to_homeFragment)
+                findNavController().navigate(R.id.action_loginFragment2_to_profileFragment)
             }
         }
     }
 
-
-    //TODO - NOVO JEITO DE STARTAR UMA ACTIVITY FOR RESULT
     private fun registerGoogleLogInActivity() {
         resultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -172,7 +168,7 @@ class LoginFragment : Fragment() {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                     handleGoogleSignInResult(task)
                 }
-                else -> viewModel.hideGoogleLoading()
+                else -> viewModel.hideAllLoadings()
             }
         }
     }
@@ -182,13 +178,12 @@ class LoginFragment : Fragment() {
         resultLauncher.launch(googleSignInClient.signInIntent)
     }
 
-
     private fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) = try {
         val account = task.getResult(ApiException::class.java)
         viewModel.firebaseAuthWithGoogle(account, requireActivity())
     } catch (e: ApiException) {
         Log.w("GOOGLE_SIGN_IN", "signInResult:failed code=" + e.statusCode)
-        viewModel.hideGoogleLoading()
+        viewModel.hideAllLoadings()
     }
 
     private fun startFacebookLogin() = LoginManager.getInstance().run {
@@ -202,11 +197,11 @@ class LoginFragment : Fragment() {
             }
 
             override fun onCancel() {
-                viewModel.hideFacebookLoading()
+                viewModel.hideAllLoadings()
             }
 
             override fun onError(error: FacebookException) {
-                viewModel.hideFacebookLoading()
+                viewModel.hideAllLoadings()
             }
 
         })

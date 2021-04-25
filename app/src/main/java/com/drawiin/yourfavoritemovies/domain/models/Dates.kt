@@ -1,4 +1,4 @@
-package com.drawiin.yourfavoritemovies.model
+package com.drawiin.yourfavoritemovies.domain.models
 
 
 import com.google.gson.annotations.SerializedName
