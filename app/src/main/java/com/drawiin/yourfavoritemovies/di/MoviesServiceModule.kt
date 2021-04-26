@@ -1,8 +1,8 @@
 package com.drawiin.yourfavoritemovies.di
 
 import com.drawiin.yourfavoritemovies.BuildConfig
-import com.drawiin.yourfavoritemovies.data.services.movies.MoviesService
-import com.drawiin.yourfavoritemovies.data.services.movies.MoviesService.Companion.BASE_URL
+import com.drawiin.yourfavoritemovies.data.network.MoviesService
+import com.drawiin.yourfavoritemovies.data.network.MoviesService.Companion.BASE_URL
 import com.drawiin.yourfavoritemovies.utils.Constants
 import com.google.gson.GsonBuilder
 import dagger.Module

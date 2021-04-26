@@ -1,4 +1,4 @@
-package com.drawiin.yourfavoritemovies.data.services.movies
+package com.drawiin.yourfavoritemovies.data.network
 
 import com.drawiin.yourfavoritemovies.domain.models.ApiResponse
 import retrofit2.http.GET

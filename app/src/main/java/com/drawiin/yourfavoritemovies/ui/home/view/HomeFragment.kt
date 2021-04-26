@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
@@ -21,8 +20,6 @@ import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
 import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.flow.collectLatest
@@ -47,19 +44,9 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        requireActivity()
-//            .onBackPressedDispatcher
-//            .addCallback(
-//                viewLifecycleOwner,
-//                getOnBackPressedCallback()
-//            )
     }
 
 
@@ -95,7 +82,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun onMenuItemClicked(menuItem: MenuItem) = when (menuItem.itemId) {
-        R.id.action_favoritos -> {
+        R.id.action_favorites -> {
             findNavController().navigate(R.id.action_homeFragment_to_favoritesFragment)
             true
         }
@@ -126,6 +113,10 @@ class HomeFragment : Fragment() {
                 showErrorMessage(it)
             }
         }
+
+        currentProfile.observe(viewLifecycleOwner) { profile ->
+            binding.toolbar.title = profile.name
+        }
     }
 
     private fun showFavoriteMessage(movie: Movie) {
@@ -137,7 +128,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun favoriteMovie(movie: Movie) {
-        viewModel.saveFavorite(movie)
+        viewModel.saveToWatchList(movie)
+//        viewModel.saveFavorite(movie)
     }
 
     private fun showLoading(status: Boolean) {
@@ -182,10 +174,10 @@ class HomeFragment : Fragment() {
         Snackbar.make(rv_movies, message, Snackbar.LENGTH_LONG).show()
     }
 
-    private fun exitProfile() = context?.let {
-        Firebase.auth.signOut()
-        findNavController().navigate(R.id.goToLogin)
+    private fun exitProfile(){
+        findNavController().popBackStack()
     }
+
 
 
     companion object {

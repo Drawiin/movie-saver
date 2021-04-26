@@ -7,14 +7,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.drawiin.yourfavoritemovies.domain.interactor.GetMovies
 import com.drawiin.yourfavoritemovies.domain.models.Movie
-import com.drawiin.yourfavoritemovies.utils.SingleLiveEvent
-import com.drawiin.yourfavoritemovies.utils.Constants.FAVORITES_PATH
+import com.drawiin.yourfavoritemovies.domain.models.Profile
 import com.drawiin.yourfavoritemovies.utils.MovieUtil
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.drawiin.yourfavoritemovies.utils.SingleLiveEvent
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -25,31 +22,52 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     application: Application,
-    private val getMovies: GetMovies
+    private val getMovies: GetMovies,
+    private val auth: FirebaseAuth,
+    private val database: DatabaseReference
 ) : AndroidViewModel(application) {
-
-
     var stateList: MutableLiveData<SingleLiveEvent<Flow<PagingData<Movie>>>> = MutableLiveData()
     var error: MutableLiveData<SingleLiveEvent<String>> = MutableLiveData()
     var loading: MutableLiveData<Boolean> = MutableLiveData()
     var stateFavorite: MutableLiveData<Movie> = MutableLiveData()
+    val currentProfile = MutableLiveData<Profile>()
 
-    private val path by lazy {
-        MovieUtil.getUserId(getApplication()).toString() + FAVORITES_PATH
+    private val currentProfileId by lazy {
+        MovieUtil.getProfileId(getApplication())
     }
 
     private val databaseRef by lazy {
-        Firebase.database.getReference(path)
+        database
+            .child("users")
+            .child(auth.currentUser?.uid.toString())
+            .child("profiles")
     }
 
     init {
         getListMovies()
+        getCurrentProfileInfo {
+            currentProfile.value = it
+        }
     }
 
-    fun saveFavorite(movie: Movie) = databaseRef.apply {
-        orderByKey()
-        addListenerForSingleValueEvent(getSaveFavoriteListener(movie))
+    fun saveToWatchList(movie: Movie) = getCurrentProfileInfo { profile ->
+        profile
+            .watchList
+            .any { it.id == movie.id }
+            .takeUnless { it }
+            ?.let { saveMovieOnWatchList(movie, profile.watchList) }
     }
+
+    private fun saveMovieOnWatchList(movie: Movie, watchList: List<Movie>) {
+        databaseRef.get().addOnSuccessListener { snapshot ->
+            snapshot.children
+                .map { it.getValue(Profile::class.java) }
+                .indexOfLast { it?.id == currentProfileId }
+                .let { databaseRef.child(it.toString()).child("watchList") }
+                .setValue(watchList.plus(movie))
+        }
+    }
+
 
     private fun getListMovies() = viewModelScope.launch(Dispatchers.IO) {
         loading.postValue(true)
@@ -63,54 +81,22 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun saveMovieFavorite(movie: Movie) = databaseRef.push().key?.let { key ->
-        databaseRef.child(key).apply {
-            setValue(movie)
-            addListenerForSingleValueEvent(getSaveFavoriteMovieListener())
-        }
+    private fun getCurrentProfileInfo(onProfileReceived: (Profile) -> Unit) {
+        databaseRef.get().addOnSuccessListener { snapshot ->
+            snapshot
+                .children
+                .map { it.getValue(Profile::class.java) }
+                .findLast { it?.id == currentProfileId }
+                ?.let { onProfileReceived(it) }
 
+        }
     }
 
-    private fun getSaveFavoriteListener(movie: Movie) = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            var movieAdded = false
-            snapshot.children.forEach { snapResult ->
-                snapResult.getValue(Movie::class.java)?.id?.let { id ->
-                    when (id) {
-                        movie.id -> {
-                            movieAdded = true
-                        }
-                    }
-                }
-            }
-
-            when {
-                movieAdded -> {
-                    errorMessage("O Filme já foi adicionado")
-                }
-                else -> {
-                    saveMovieFavorite(movie)
-                }
-            }
-        }
-
-        override fun onCancelled(error: DatabaseError) {}
-    }
-
-    private fun getSaveFavoriteMovieListener() = object : ValueEventListener {
-        override fun onCancelled(error: DatabaseError) {
-            errorMessage(error.message)
-        }
-
-        override fun onDataChange(snapshot: DataSnapshot) {
-            stateFavorite.value = snapshot.getValue(Movie::class.java)
-        }
-
-    }
 
     private fun errorMessage(message: String) {
         error.value = SingleLiveEvent(message)
     }
 }
+
 
 

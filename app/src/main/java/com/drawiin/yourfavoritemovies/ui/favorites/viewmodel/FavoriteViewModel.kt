@@ -20,7 +20,7 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
     var loading: MutableLiveData<Boolean> = MutableLiveData()
 
     private val favoritesPath by lazy {
-        MovieUtil.getUserId(getApplication()).toString() + Constants.FAVORITES_PATH
+        MovieUtil.getProfileId(getApplication()).toString() + Constants.FAVORITES_PATH
     }
 
     private val databaseRef by lazy {

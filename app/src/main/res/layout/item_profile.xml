@@ -16,34 +16,38 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/fui_transparent">
+
             <ImageView
+                android:elevation="80dp"
+                android:id="@+id/btn_delete"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="@dimen/spacing_default"
-                app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/ic_baseline_close_24"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_profile"
                 style="@style/ButtonOutlined"
-                android:layout_marginHorizontal="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="1:1"
+                android:layout_marginHorizontal="8dp"
+                android:textSize="28sp"
                 android:transitionName="btn_facebook"
-                tools:text="Perfil 01"
                 app:icon="@drawable/ic_baseline_tag_faces_24"
                 app:iconGravity="textTop"
                 app:iconPadding="@dimen/spacing_default"
                 app:iconSize="32dp"
-                android:textSize="28sp"
                 app:iconTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-               />
+                tools:text="Perfil 01" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

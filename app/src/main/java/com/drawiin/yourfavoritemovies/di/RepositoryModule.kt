@@ -1,7 +1,7 @@
 package com.drawiin.yourfavoritemovies.di
 
 import com.drawiin.yourfavoritemovies.data.repository.DefaultMoviesRepository
-import com.drawiin.yourfavoritemovies.data.services.movies.MoviesPagingSource
+import com.drawiin.yourfavoritemovies.data.network.MoviesPagingSource
 import com.drawiin.yourfavoritemovies.domain.boundaries.MoviesRepository
 import dagger.Module
 import dagger.Provides

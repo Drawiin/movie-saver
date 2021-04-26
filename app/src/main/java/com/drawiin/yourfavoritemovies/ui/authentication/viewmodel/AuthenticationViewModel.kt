@@ -25,7 +25,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -164,7 +163,7 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
                         )
                     )
                 }
-                MovieUtil.saveUserId(getApplication(), uid)
+                MovieUtil.saveProfileUid(getApplication(), uid)
                 hideAllLoadings()
                 onAuthSuccess()
             }
@@ -180,7 +179,7 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
     fun loadCurrentUser() {
         Log.d("AUTH_VIEWMODEL", "onAuth sucess")
         if (auth.currentUser != null){
-            MovieUtil.saveUserId(getApplication(), auth.currentUser?.uid)
+            MovieUtil.saveProfileUid(getApplication(), auth.currentUser?.uid)
             stateLogin.value = SingleLiveEvent(true)
         }
     }

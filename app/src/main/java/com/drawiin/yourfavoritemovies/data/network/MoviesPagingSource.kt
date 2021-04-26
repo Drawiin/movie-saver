@@ -1,4 +1,4 @@
-package com.drawiin.yourfavoritemovies.data.services.movies
+package com.drawiin.yourfavoritemovies.data.network
 
 import android.util.Log
 import androidx.paging.PagingSource

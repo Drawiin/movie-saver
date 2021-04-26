@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Movies</string>
-    <string name="action_logout">Sair</string>
+    <string name="action_logout">Sair do perfil</string>
     <string name="action_favoritos">Favoritos</string>
     <string name="title_activity_login">Entar</string>
     <string name="title_activity_movies">Filmes</string>
@@ -29,5 +29,6 @@
     <string name="have_account">Já tem conta ?</string>
     <string name="dont_have_account">Ainda não tem conta ?</string>
     <string name="profile_text">Perfis</string>
+    <string name="search_menu">Buscar</string>
 
 </resources>

@@ -13,6 +13,9 @@ class ProfileViewHolder(val binding: ItemProfileBinding) : RecyclerView.ViewHold
         binding.btnProfile.setOnClickListener {
             onClick(profile)
         }
+        binding.btnDelete.setOnClickListener {
+            onClickToDelete(profile)
+        }
     }
 
     companion object {

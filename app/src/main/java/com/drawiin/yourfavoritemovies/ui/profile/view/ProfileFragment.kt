@@ -14,7 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentProfileBinding
+import com.drawiin.yourfavoritemovies.domain.models.Profile
 import com.drawiin.yourfavoritemovies.ui.adapter.ProfileAdapter
+import com.drawiin.yourfavoritemovies.ui.home.view.HomeFragment
 import com.drawiin.yourfavoritemovies.ui.profile.viewmodel.ProfileViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -24,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
     private val viewModel: ProfileViewModel by viewModels()
-    private val adapter = ProfileAdapter({}, {})
+    private val adapter = ProfileAdapter(::goToHome, ::deleteProfile)
 
     private lateinit var binding: FragmentProfileBinding
 
@@ -64,6 +66,13 @@ class ProfileFragment : Fragment() {
         else -> false
     }
 
+    private fun goToHome(profile: Profile) {
+        viewModel.saveCurrentProfileId(profile.id)
+        findNavController().navigate(
+            R.id.action_profileFragment_to_homeFragment
+        )
+    }
+
     private fun logout() = context?.let {
         Firebase.auth.signOut()
         findNavController().navigate(R.id.goToLogin)
@@ -83,6 +92,9 @@ class ProfileFragment : Fragment() {
             }
             setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
         }.show()
+    }
 
+    private fun deleteProfile(profile: Profile) {
+        viewModel.deleteProfile(profile)
     }
 }

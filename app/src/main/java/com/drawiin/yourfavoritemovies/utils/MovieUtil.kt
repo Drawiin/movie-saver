@@ -8,14 +8,14 @@ import com.drawiin.yourfavoritemovies.utils.Constants.EMPTY_STRING
 import com.drawiin.yourfavoritemovies.utils.Constants.UUID_KEY
 
 object MovieUtil {
-    fun saveUserId(context: Context, uiid: String?) {
+    fun saveProfileUid(context: Context, uid: String?) {
         val preferences = context.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
         preferences.edit {
-            putString(UUID_KEY, uiid)
+            putString(UUID_KEY, uid)
         }
     }
 
-    fun getUserId(context: Context): String? {
+    fun getProfileId(context: Context): String? {
         val preferences = context.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
         return preferences.getString(UUID_KEY, EMPTY_STRING)
     }

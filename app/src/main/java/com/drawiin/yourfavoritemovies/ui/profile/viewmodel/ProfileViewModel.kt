@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.drawiin.yourfavoritemovies.domain.models.Profile
+import com.drawiin.yourfavoritemovies.utils.MovieUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -82,6 +83,39 @@ class ProfileViewModel @Inject constructor(
         )
         databaseRef.setValue(profiles.plus(newProfile))
     }
+
+    fun deleteProfile(profile: Profile) =
+        databaseRef?.addListenerForSingleValueEvent(
+            object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot
+                        .children
+                        .mapNotNull { result ->
+                            result.getValue(Profile::class.java)
+                        }.toList()
+                        .takeUnless { it.isNullOrEmpty() }
+                        ?.let { profiles ->
+                            removeProfileById(profile.id, profiles)
+                        }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            }
+        )
+
+    private fun removeProfileById(
+        id: String,
+        profiles: List<Profile>
+    ) {
+        if (profiles.size > 1) {
+            databaseRef?.setValue(profiles.filter { it.id != id })
+        }
+    }
+
+    fun saveCurrentProfileId(id: String) {
+        MovieUtil.saveProfileUid(getApplication(), id)
+    }
+
 }
 
 
