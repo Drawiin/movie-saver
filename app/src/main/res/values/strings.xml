@@ -31,5 +31,6 @@
     <string name="profile_text">Perfis</string>
     <string name="search_menu">Buscar</string>
     <string name="buscar">buscar</string>
+    <string name="action_watched">Filmes Assistidos</string>
 
 </resources>

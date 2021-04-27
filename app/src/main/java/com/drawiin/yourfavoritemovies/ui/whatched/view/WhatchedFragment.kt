@@ -1,7 +1,9 @@
-package com.drawiin.yourfavoritemovies.ui.favorites.view
+package com.drawiin.yourfavoritemovies.ui.whatched.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
@@ -9,39 +11,40 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
-import com.drawiin.yourfavoritemovies.databinding.FragmentFavoritesBinding
+import com.drawiin.yourfavoritemovies.databinding.FragmentWatchedBinding
 import com.drawiin.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
 import com.drawiin.yourfavoritemovies.domain.models.Movie
 import com.drawiin.yourfavoritemovies.ui.adapter.FavoritesAdapter
-import com.drawiin.yourfavoritemovies.ui.favorites.viewmodel.FavoriteViewModel
+import com.drawiin.yourfavoritemovies.ui.whatched.viewmodel.WatchedViewModel
 import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
 import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.ceil
 
 @AndroidEntryPoint
-class FavoritesFragment : Fragment() {
+class WhatchedFragment : Fragment() {
     private var resultRemove = Movie()
     private var isAppBarExpanded = true
 
     private val adapter: FavoritesAdapter by lazy {
         FavoritesAdapter(
-            this::moveToWatchedMovies
+            {}
         )
     }
 
-    private val viewModel: FavoriteViewModel by viewModels()
+    private val viewModel: WatchedViewModel by viewModels()
 
-    private lateinit var binding: FragmentFavoritesBinding
+    private lateinit var binding:
+            FragmentWatchedBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFavoritesBinding.inflate(inflater, container, false)
+        binding =
+            FragmentWatchedBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -76,7 +79,7 @@ class FavoritesFragment : Fragment() {
 
     private fun setupUi() {
         binding.rvMoviesFavorites.apply {
-            adapter = this@FavoritesFragment.adapter
+            adapter = this@WhatchedFragment.adapter
             layoutManager = GridLayoutManager(context, 3)
         }
         binding.toolbar.setNavigationOnClickListener {
@@ -85,6 +88,8 @@ class FavoritesFragment : Fragment() {
         binding.appbar.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
             isAppBarExpanded = verticalOffset == 0
         })
+
+        binding.toolbar.setOnMenuItemClickListener { onMenuItemClicked(it) }
     }
 
     private fun subscribeUi() {
@@ -95,31 +100,34 @@ class FavoritesFragment : Fragment() {
         }
 
 
-        viewModel.stateMovedToWatchedMovies.observe(viewLifecycleOwner) { removed ->
-            removed?.let {
-                showMessageRemovedFavorite(it)
-            }
-        }
-
         viewModel.loading.observe(viewLifecycleOwner) {
             showLoading(it)
         }
     }
 
-    private fun moveToWatchedMovies(movie: Movie) {
-        viewModel.moveToWatchedMovies(movie)
-    }
 
+    private fun onMenuItemClicked(menuItem: MenuItem) = when (menuItem.itemId) {
+        R.id.action_share -> {
+            share()
+            true
+        }
+        else -> false
+    }
 
     private fun showListFavorites(list: List<Movie>) = adapter.submitList(list)
 
-    private fun showMessageRemovedFavorite(movie: Movie) {
-        resultRemove = movie
-        Snackbar.make(
-            binding.rvMoviesFavorites,
-            resources.getString(R.string.moved_movie, movie.title),
-            Snackbar.LENGTH_LONG
-        ).show()
+    private fun share() {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "Hey olha só eu já assisti ${viewModel.stateList.value?.size ?: 0} filmes no "
+            )
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        activity?.startActivity(shareIntent)
     }
 
     private fun showLoading(status: Boolean) {

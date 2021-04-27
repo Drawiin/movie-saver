@@ -73,12 +73,12 @@ class HomeViewModel @Inject constructor(
 
     private fun getListMovies() = viewModelScope.launch(Dispatchers.IO) {
         loading.postValue(true)
-        delay(2000L)
         try {
             stateList.postValue(SingleLiveEvent(getMovies.run()))
         } catch (ex: Exception) {
             showMessage("Opa temos um problema tente novamente mais tarde")
         } finally {
+            delay(1000L)
             loading.postValue(false)
         }
     }

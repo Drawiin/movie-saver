@@ -66,10 +66,10 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
         passwordLoading.value = false
     }
 
-    fun registerUser(email: String, password: String) = auth.run {
+    fun registerUser(email: String, password: String, name: String, birth: String) = auth.run {
         passwordLoading.value = true
         createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task -> onEmailAuthComplete(task) }
+            .addOnCompleteListener { task -> onEmailAuthComplete(task, name, birth) }
     }
 
     fun logInUser(email: String, password: String) = auth.run {
@@ -124,10 +124,10 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
         }
     }
 
-    private fun onEmailAuthComplete(task: Task<AuthResult>) {
+    private fun onEmailAuthComplete(task: Task<AuthResult>, name: String? = null, birth: String? = null) {
         when {
             task.isSuccessful -> auth.currentUser?.uid?.let {
-                onUserAuthenticate(it)
+                onUserAuthenticate(it, name, birth)
             }
             else -> {
                 errorMessage()
@@ -139,7 +139,7 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
         error.value = "Houve um erro ao realizar login verifique as credencias"
     }
 
-    private fun onUserAuthenticate(uid: String) {
+    private fun onUserAuthenticate(uid: String, name: String? = null, birth: String? = null) {
         val databaseRef = database.child("users").child(uid)
         databaseRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -148,17 +148,17 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
                     val key  = databaseRef.push().key
                     databaseRef.setValue(
                         User(
-                            name = auth.currentUser?.displayName ?: "Padrão",
+                            name = auth.currentUser?.displayName ?: name ?:"Padrão",
                             uid = uid,
                             profiles = listOf(
                                 Profile(
                                     id = key.toString(),
-                                    name = auth.currentUser?.displayName ?: "Padrão",
+                                    name = auth.currentUser?.displayName ?: name ?:"Padrão",
                                     watchList = emptyList(),
                                     watchedMovies = emptyList()
                                 )
                             ),
-                            birth = "11/01/2001",
+                            birth = birth ?: "11/01/2001",
                             email = auth.currentUser?.email ?: ""
                         )
                     )

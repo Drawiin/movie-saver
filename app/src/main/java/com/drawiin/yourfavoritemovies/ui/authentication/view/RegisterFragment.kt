@@ -14,7 +14,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.drawiin.yourfavoritemovies.R
@@ -94,10 +93,11 @@ class RegisterFragment : Fragment() {
             val name = inputName.text.toString()
             val email = inputEmail.text.toString()
             val password = inputPassword.text.toString()
+            val birth = inputBirth.text.toString()
 
             when {
                 MovieUtil.validateNameEmailPassword(name, email, password) -> {
-                    viewModel.registerUser(email, password)
+                    viewModel.registerUser(email, password, name, birth)
                 }
             }
         }

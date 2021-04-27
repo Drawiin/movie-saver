@@ -96,6 +96,11 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
             false
         }
+
+        R.id.action_watched -> {
+            findNavController().navigate(R.id.action_homeFragment_to_whatchedFragment)
+            false
+        }
         else -> false
     }
 
@@ -169,7 +174,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun exitProfile() {
-        Firebase.auth.signOut()
         findNavController().popBackStack()
     }
 
