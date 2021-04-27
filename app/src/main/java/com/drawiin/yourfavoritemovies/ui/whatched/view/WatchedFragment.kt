@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.ceil
 
 @AndroidEntryPoint
-class WhatchedFragment : Fragment() {
+class WatchedFragment : Fragment() {
     private var resultRemove = Movie()
     private var isAppBarExpanded = true
 
@@ -79,7 +79,7 @@ class WhatchedFragment : Fragment() {
 
     private fun setupUi() {
         binding.rvMoviesFavorites.apply {
-            adapter = this@WhatchedFragment.adapter
+            adapter = this@WatchedFragment.adapter
             layoutManager = GridLayoutManager(context, 3)
         }
         binding.toolbar.setNavigationOnClickListener {

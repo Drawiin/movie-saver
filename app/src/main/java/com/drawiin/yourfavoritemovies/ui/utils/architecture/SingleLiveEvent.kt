@@ -1,4 +1,4 @@
-package com.drawiin.yourfavoritemovies.utils
+package com.drawiin.yourfavoritemovies.ui.utils.architecture
 
 open class SingleLiveEvent<out T>(private val content: T) {
 

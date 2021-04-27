@@ -8,8 +8,9 @@ import androidx.paging.PagingData
 import com.drawiin.yourfavoritemovies.domain.interactor.GetMovies
 import com.drawiin.yourfavoritemovies.domain.models.Movie
 import com.drawiin.yourfavoritemovies.domain.models.Profile
+import com.drawiin.yourfavoritemovies.ui.utils.architecture.SingleLiveEvent
+import com.drawiin.yourfavoritemovies.utils.Constants.NAME_PROVIDE_LOGOUT
 import com.drawiin.yourfavoritemovies.utils.MovieUtil
-import com.drawiin.yourfavoritemovies.utils.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(

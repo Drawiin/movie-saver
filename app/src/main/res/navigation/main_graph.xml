@@ -74,6 +74,6 @@
         android:label="SearchFragment" />
     <fragment
         android:id="@+id/whatchedFragment"
-        android:name="com.drawiin.yourfavoritemovies.ui.whatched.view.WhatchedFragment"
+        android:name="com.drawiin.yourfavoritemovies.ui.whatched.view.WatchedFragment"
         android:label="WhatchedFragment" />
 </navigation>

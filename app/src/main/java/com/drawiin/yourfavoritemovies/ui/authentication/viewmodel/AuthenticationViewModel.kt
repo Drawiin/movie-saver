@@ -9,7 +9,7 @@ import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.domain.models.Profile
 import com.drawiin.yourfavoritemovies.domain.models.User
 import com.drawiin.yourfavoritemovies.utils.MovieUtil
-import com.drawiin.yourfavoritemovies.utils.SingleLiveEvent
+import com.drawiin.yourfavoritemovies.ui.utils.architecture.SingleLiveEvent
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions

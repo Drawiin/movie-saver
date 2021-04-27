@@ -58,19 +58,6 @@ class HomeFragment : Fragment() {
         subscribeUi()
     }
 
-//    private fun getOnBackPressedCallback() =
-//        object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() =
-//                if (binding.nestedScroll.scrollY > 0 || !isAppBarExpanded) {
-//                    binding.nestedScroll.smoothScrollTo(0, 0)
-//                    binding.appbar.setExpanded(true, true)
-//                } else {
-//                    isEnabled = false
-//                    requireActivity().finishAndRemoveTask()
-//                }
-//
-//        }
-
     private fun setupUi() = binding.run {
         rvMovies.apply {
             adapter = this@HomeFragment.adapter

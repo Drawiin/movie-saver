@@ -1,7 +1,6 @@
 package com.drawiin.yourfavoritemovies.ui.search.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,7 +9,7 @@ import com.drawiin.yourfavoritemovies.domain.interactor.SearchMovies
 import com.drawiin.yourfavoritemovies.domain.models.Movie
 import com.drawiin.yourfavoritemovies.domain.models.Profile
 import com.drawiin.yourfavoritemovies.utils.MovieUtil
-import com.drawiin.yourfavoritemovies.utils.SingleLiveEvent
+import com.drawiin.yourfavoritemovies.ui.utils.architecture.SingleLiveEvent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel

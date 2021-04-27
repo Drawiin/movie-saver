@@ -72,7 +72,6 @@ class ProfileViewModel @Inject constructor(
         )
     }
 
-
     private fun saveNewProfile(
         newProfileName: String,
         profiles: List<Profile>

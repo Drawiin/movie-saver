@@ -16,10 +16,8 @@ import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentProfileBinding
 import com.drawiin.yourfavoritemovies.domain.models.Profile
 import com.drawiin.yourfavoritemovies.ui.adapter.ProfileAdapter
-import com.drawiin.yourfavoritemovies.ui.home.view.HomeFragment
 import com.drawiin.yourfavoritemovies.ui.profile.viewmodel.ProfileViewModel
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.firebase.ui.auth.AuthUI
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -74,8 +72,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun logout() = context?.let {
-        Firebase.auth.signOut()
-        findNavController().navigate(R.id.goToLogin)
+        AuthUI.getInstance().signOut(requireContext()).addOnCompleteListener {
+            findNavController().navigate(R.id.goToLogin)
+        }
     }
 
     private fun openCreateProfileDialog() {

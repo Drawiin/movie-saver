@@ -6,21 +6,21 @@
         android:icon="@drawable/ic_list_confirm"
         android:orderInCategory="100"
         android:title="@string/action_watch_list"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_favorites"
         android:icon="@drawable/ic_favorite_white"
         android:orderInCategory="100"
         android:title="@string/action_watch_list"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_baseline_search_24"
         android:orderInCategory="100"
         android:title="@string/search_menu"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_logout"
