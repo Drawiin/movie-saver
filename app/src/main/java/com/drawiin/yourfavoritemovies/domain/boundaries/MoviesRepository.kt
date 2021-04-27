@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MoviesRepository {
     fun getMoviesPlayingNow(): Flow<PagingData<Movie>>
+    fun searchMovies(query: String): Flow<PagingData<Movie>>
 }

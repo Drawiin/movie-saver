@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Movies</string>
     <string name="action_logout">Sair do perfil</string>
-    <string name="action_favoritos">Favoritos</string>
+    <string name="action_watch_list">Lista para assistir</string>
     <string name="title_activity_login">Entar</string>
     <string name="title_activity_movies">Filmes</string>
     <string name="facebook_app_id">631288837667607</string>
@@ -21,7 +21,7 @@
     <string name="notification_title">Favorite Movie</string>
     <string name="notification_text">We have new movies for you!</string>
     <string name="notification_ok">OK!</string>
-    <string name="removed_movie">"Removed film - %s</string>
+    <string name="moved_movie">"Movido para assistidos - %s</string>
     <string name="added_movie">"Movie added - %s</string>
     <string name="login">Entrar</string>
     <string name="continue_with_google">Continuar com Google</string>
@@ -30,5 +30,6 @@
     <string name="dont_have_account">Ainda não tem conta ?</string>
     <string name="profile_text">Perfis</string>
     <string name="search_menu">Buscar</string>
+    <string name="buscar">buscar</string>
 
 </resources>

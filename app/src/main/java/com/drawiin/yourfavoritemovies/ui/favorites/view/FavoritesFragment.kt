@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentFavoritesBinding
@@ -18,23 +18,21 @@ import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
 import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.ceil
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
     private var resultRemove = Movie()
     private var isAppBarExpanded = true
 
     private val adapter: FavoritesAdapter by lazy {
         FavoritesAdapter(
-            this::removeFavoriteMovie
+            this::moveToWatchedMovies
         )
     }
 
-    private val viewModel: FavoriteViewModel by lazy {
-        ViewModelProvider(this).get(
-            FavoriteViewModel::class.java
-        )
-    }
+    private val viewModel: FavoriteViewModel by viewModels()
 
     private lateinit var binding: FragmentFavoritesBinding
 
@@ -97,7 +95,7 @@ class FavoritesFragment : Fragment() {
         }
 
 
-        viewModel.stateRemoveFavorite.observe(viewLifecycleOwner) { removed ->
+        viewModel.stateMovedToWatchedMovies.observe(viewLifecycleOwner) { removed ->
             removed?.let {
                 showMessageRemovedFavorite(it)
             }
@@ -108,8 +106,8 @@ class FavoritesFragment : Fragment() {
         }
     }
 
-    private fun removeFavoriteMovie(movie: Movie) {
-        viewModel.removeFavorite(movie)
+    private fun moveToWatchedMovies(movie: Movie) {
+        viewModel.moveToWatchedMovies(movie)
     }
 
 
@@ -119,7 +117,7 @@ class FavoritesFragment : Fragment() {
         resultRemove = movie
         Snackbar.make(
             binding.rvMoviesFavorites,
-            resources.getString(R.string.removed_movie, movie.title),
+            resources.getString(R.string.moved_movie, movie.title),
             Snackbar.LENGTH_LONG
         ).show()
     }

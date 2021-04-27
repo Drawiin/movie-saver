@@ -136,7 +136,7 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
     }
 
     private fun errorMessage() {
-        error.value = "Something was wrong!!!"
+        error.value = "Houve um erro ao realizar login verifique as credencias"
     }
 
     private fun onUserAuthenticate(uid: String) {

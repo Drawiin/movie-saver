@@ -4,71 +4,95 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.drawiin.yourfavoritemovies.domain.models.Movie
-import com.drawiin.yourfavoritemovies.utils.Constants
-import com.drawiin.yourfavoritemovies.utils.Constants.ID_PATH
+import com.drawiin.yourfavoritemovies.domain.models.Profile
 import com.drawiin.yourfavoritemovies.utils.MovieUtil
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class FavoriteViewModel @Inject constructor(
+    application: Application,
+    private val auth: FirebaseAuth,
+    private val database: DatabaseReference,
+) : AndroidViewModel(application) {
 
-    var stateRemoveFavorite: MutableLiveData<Movie> = MutableLiveData()
+    var stateMovedToWatchedMovies: MutableLiveData<Movie> = MutableLiveData()
     var stateList: MutableLiveData<List<Movie>> = MutableLiveData()
     var loading: MutableLiveData<Boolean> = MutableLiveData()
 
-    private val favoritesPath by lazy {
-        MovieUtil.getProfileId(getApplication()).toString() + Constants.FAVORITES_PATH
+    private val currentProfileId by lazy {
+        MovieUtil.getProfileId(getApplication())
     }
 
     private val databaseRef by lazy {
-        Firebase.database.getReference(favoritesPath)
+        database
+            .child("users")
+            .child(auth.currentUser?.uid.toString())
+            .child("profiles")
     }
 
     init {
-        loadFavorites()
-    }
-
-    private fun loadFavorites() = databaseRef.run {
         loading.value = true
-        orderByKey()
-        addValueEventListener(loadValueListener())
+        loadWatchList()
     }
 
-    fun removeFavorite(movie: Movie) = databaseRef.run {
-        orderByChild(ID_PATH)
-        addListenerForSingleValueEvent(removeValueListener(movie))
-    }
-
-    private fun loadValueListener() = object : ValueEventListener {
-        override fun onCancelled(error: DatabaseError) {}
-
-        override fun onDataChange(snapshot: DataSnapshot) = stateList.run {
-            val retrieved = snapshot.children.mapNotNull { result ->
-                result.getValue(Movie::class.java)
-            }.toList()
-            if (!retrieved.isNullOrEmpty()) value = retrieved
+    private fun loadWatchList() {
+        getCurrentProfileInfo { profile ->
+            stateList.value = profile.watchList
             loading.value = false
         }
     }
 
-    private fun removeValueListener(movie: Movie) = object : ValueEventListener {
-        override fun onCancelled(error: DatabaseError) {}
-
-        override fun onDataChange(snapshot: DataSnapshot) = snapshot.children.forEach { value ->
-            value.getValue(Movie::class.java)?.id?.let { id ->
-                if (id == movie.id)
-                    when (id) {
-                        movie.id -> {
-                            value.ref.removeValue()
-                            stateRemoveFavorite.value = movie
-                        }
-                    }
+    fun moveToWatchedMovies(movieToBeMoved: Movie) = getCurrentProfileInfo { profile ->
+        profile
+            .watchedMovies
+            .any { it.id == movieToBeMoved.id }
+            .takeUnless { it }
+            ?.let {
+                confirmMoveToWatchedMovies(
+                    movieToBeMoved,
+                    profile.watchedMovies,
+                    profile.watchList
+                )
             }
+    }
+
+    private fun confirmMoveToWatchedMovies(
+        movieToBeMoved: Movie,
+        watchedMovies: List<Movie>,
+        watchList: List<Movie>
+    ) {
+        databaseRef.get().addOnSuccessListener { snapshot ->
+            snapshot.children
+                .map { profileSnapshot -> profileSnapshot.getValue(Profile::class.java) }
+                .indexOfLast { profile -> profile?.id == currentProfileId }
+                .let { profileId -> databaseRef.child(profileId.toString()) }
+                .let { ref ->
+                    ref.child("watchedMovies")
+                        .setValue(watchedMovies.plus(movieToBeMoved))
+
+                    ref.child("watchList")
+                        .setValue(watchList.filter { it.id != movieToBeMoved.id })
+                        .addOnSuccessListener {
+                            loadWatchList()
+                            stateMovedToWatchedMovies.value = movieToBeMoved
+                        }
+                }
+
         }
     }
 
+    private fun getCurrentProfileInfo(onProfileReceived: (Profile) -> Unit) {
+        databaseRef.get().addOnSuccessListener { snapshot ->
+            snapshot
+                .children
+                .map { it.getValue(Profile::class.java) }
+                .findLast { it?.id == currentProfileId }
+                ?.let { onProfileReceived(it) }
+
+        }
+    }
 
 }

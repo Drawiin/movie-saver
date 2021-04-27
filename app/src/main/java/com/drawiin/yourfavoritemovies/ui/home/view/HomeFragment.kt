@@ -20,6 +20,8 @@ import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
 import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.flow.collectLatest
@@ -34,7 +36,7 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     private val adapter: PagedMoviesAdapter by lazy {
-        PagedMoviesAdapter(this::favoriteMovie)
+        PagedMoviesAdapter(this::moveToWatchList)
     }
 
     private lateinit var binding: FragmentHomeBinding
@@ -90,6 +92,10 @@ class HomeFragment : Fragment() {
             exitProfile()
             true
         }
+        R.id.action_search -> {
+            findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+            false
+        }
         else -> false
     }
 
@@ -102,13 +108,11 @@ class HomeFragment : Fragment() {
             }
         }
 
-        stateFavorite.observe(viewLifecycleOwner) { it.let(::showFavoriteMessage) }
-
         loading.observe(viewLifecycleOwner) {
             it?.let(::showLoading)
         }
 
-        error.observe(viewLifecycleOwner) { error ->
+        message.observe(viewLifecycleOwner) { error ->
             error?.getContentIfNotHandled()?.let {
                 showErrorMessage(it)
             }
@@ -119,17 +123,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showFavoriteMessage(movie: Movie) {
-        Snackbar.make(
-            binding.rvMovies,
-            "Filme ${movie.title} adicionado com sucesso",
-            Snackbar.LENGTH_LONG
-        )
-    }
-
-    private fun favoriteMovie(movie: Movie) {
+    private fun moveToWatchList(movie: Movie) {
         viewModel.saveToWatchList(movie)
-//        viewModel.saveFavorite(movie)
     }
 
     private fun showLoading(status: Boolean) {
@@ -138,7 +133,6 @@ class HomeFragment : Fragment() {
                 showShimmerLoading()
             }
             else -> {
-
                 hideShimmerLoading()
             }
         }
@@ -174,14 +168,14 @@ class HomeFragment : Fragment() {
         Snackbar.make(rv_movies, message, Snackbar.LENGTH_LONG).show()
     }
 
-    private fun exitProfile(){
+    private fun exitProfile() {
+        Firebase.auth.signOut()
         findNavController().popBackStack()
     }
 
 
-
     companion object {
-        private const val GRID_SPAN_COUNT = 3
-        private const val GRID_ITEM_RATIO_H = 1.5f
+        const val GRID_SPAN_COUNT = 3
+        const val GRID_ITEM_RATIO_H = 1.5f
     }
 }
