@@ -11,8 +11,7 @@
     <style name="Theme.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/fui_transparent</item>
         <item name="android:navigationBarColor">@color/fui_transparent</item>
-        <item name="android:enforceNavigationBarContrast">false</item>
-        <item name="android:windowBackground">@drawable/splash_background</item>
+git         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
     <style name="TextInputLayoutStyle" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
