@@ -118,10 +118,16 @@ class WatchedFragment : Fragment() {
 
     private fun share() {
         val sendIntent: Intent = Intent().apply {
+            val size = viewModel.stateList.value?.size ?: 0
+            val movies = viewModel.stateList.value?.map { "\n\t * ${it.title}" }?.reduce { acc, s -> acc + s }
             action = Intent.ACTION_SEND
             putExtra(
                 Intent.EXTRA_TEXT,
-                " ${viewModel.stateList.value?.size ?: 0} filmes no "
+                "[Movies Saver]" +
+                        "\nOlha já tenho $size filmes" +
+                        "\nna minha lista de filmes assistidos" +
+                        "\nIncluindo" +
+                        movies
             )
             type = "text/plain"
         }
