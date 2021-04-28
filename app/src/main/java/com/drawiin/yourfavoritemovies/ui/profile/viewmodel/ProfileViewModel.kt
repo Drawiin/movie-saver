@@ -1,10 +1,9 @@
 package com.drawiin.yourfavoritemovies.ui.profile.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.drawiin.yourfavoritemovies.domain.interactor.SaveCurrentProfileUid
 import com.drawiin.yourfavoritemovies.domain.models.Profile
-import com.drawiin.yourfavoritemovies.utils.MovieUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -15,10 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    application: Application,
     private val auth: FirebaseAuth,
-    private val database: DatabaseReference
-) : AndroidViewModel(application) {
+    private val database: DatabaseReference,
+    private val saveCurrentProfileUid: SaveCurrentProfileUid
+) : ViewModel() {
     val profiles get() = _profiles
     private val _profiles: MutableLiveData<List<Profile>> by lazy { MutableLiveData() }
 
@@ -112,7 +111,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun saveCurrentProfileId(id: String) {
-        MovieUtil.saveProfileUid(getApplication(), id)
+        saveCurrentProfileUid.run(id)
     }
 
 }

@@ -1,9 +1,12 @@
 package com.drawiin.yourfavoritemovies.di
 
-import com.drawiin.yourfavoritemovies.data.repository.DefaultMoviesRepository
+import com.drawiin.yourfavoritemovies.data.cache.CacheService
 import com.drawiin.yourfavoritemovies.data.network.MoviesPagingSource
 import com.drawiin.yourfavoritemovies.data.network.MoviesService
+import com.drawiin.yourfavoritemovies.data.repository.DefaultMoviesRepository
+import com.drawiin.yourfavoritemovies.data.repository.DefaultUserRepository
 import com.drawiin.yourfavoritemovies.domain.boundaries.MoviesRepository
+import com.drawiin.yourfavoritemovies.domain.boundaries.UsersRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +25,13 @@ object RepositoryModule {
         moviesService: MoviesService
     ): MoviesRepository {
         return DefaultMoviesRepository(pagingSource, language, moviesService)
+    }
+
+    @Singleton
+    @Provides
+    fun providesUserRepository(
+        cacheService: CacheService,
+    ): UsersRepository {
+        return DefaultUserRepository(cacheService)
     }
 }

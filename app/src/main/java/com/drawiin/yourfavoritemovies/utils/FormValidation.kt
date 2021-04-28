@@ -1,25 +1,8 @@
 package com.drawiin.yourfavoritemovies.utils
 
-import android.content.Context
 import android.util.Patterns
-import androidx.core.content.edit
-import com.drawiin.yourfavoritemovies.utils.Constants.APP_KEY
-import com.drawiin.yourfavoritemovies.utils.Constants.EMPTY_STRING
-import com.drawiin.yourfavoritemovies.utils.Constants.UUID_KEY
 
-object MovieUtil {
-    fun saveProfileUid(context: Context, uid: String?) {
-        val preferences = context.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
-        preferences.edit {
-            putString(UUID_KEY, uid)
-        }
-    }
-
-    fun getProfileId(context: Context): String? {
-        val preferences = context.getSharedPreferences(APP_KEY, Context.MODE_PRIVATE)
-        return preferences.getString(UUID_KEY, EMPTY_STRING)
-    }
-
+object FormValidation {
     fun validateNameEmailPassword(name: String, email: String, password: String): Boolean {
         return when {
             name.isEmpty() || email.isEmpty() || password.isEmpty() -> {

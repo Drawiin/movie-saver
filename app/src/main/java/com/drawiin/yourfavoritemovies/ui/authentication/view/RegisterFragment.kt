@@ -20,7 +20,7 @@ import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.databinding.FragmentRegisterBinding
 import com.drawiin.yourfavoritemovies.ui.authentication.viewmodel.AuthenticationViewModel
 import com.drawiin.yourfavoritemovies.ui.authentication.viewmodel.AuthenticationViewModel.Companion.TAG
-import com.drawiin.yourfavoritemovies.utils.MovieUtil
+import com.drawiin.yourfavoritemovies.utils.FormValidation
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -96,7 +96,7 @@ class RegisterFragment : Fragment() {
             val birth = inputBirth.text.toString()
 
             when {
-                MovieUtil.validateNameEmailPassword(name, email, password) -> {
+                FormValidation.validateNameEmailPassword(name, email, password) -> {
                     viewModel.registerUser(email, password, name, birth)
                 }
             }

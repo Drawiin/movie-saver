@@ -121,7 +121,7 @@ class WatchedFragment : Fragment() {
             action = Intent.ACTION_SEND
             putExtra(
                 Intent.EXTRA_TEXT,
-                "Hey olha só eu já assisti ${viewModel.stateList.value?.size ?: 0} filmes no "
+                " ${viewModel.stateList.value?.size ?: 0} filmes no "
             )
             type = "text/plain"
         }

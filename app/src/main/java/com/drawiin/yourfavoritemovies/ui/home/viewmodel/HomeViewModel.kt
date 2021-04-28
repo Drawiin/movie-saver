@@ -5,12 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.drawiin.yourfavoritemovies.domain.interactor.GetCurrentProfileInfo
+import com.drawiin.yourfavoritemovies.domain.interactor.GetCurrentProfileUid
 import com.drawiin.yourfavoritemovies.domain.interactor.GetMovies
 import com.drawiin.yourfavoritemovies.domain.models.Movie
 import com.drawiin.yourfavoritemovies.domain.models.Profile
 import com.drawiin.yourfavoritemovies.ui.utils.architecture.SingleLiveEvent
-import com.drawiin.yourfavoritemovies.utils.Constants.NAME_PROVIDE_LOGOUT
-import com.drawiin.yourfavoritemovies.utils.MovieUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,14 +19,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     application: Application,
     private val getMovies: GetMovies,
     private val auth: FirebaseAuth,
-    private val database: DatabaseReference
+    private val database: DatabaseReference,
+    private val getCurrentProfileUid: GetCurrentProfileUid,
+    private val getCurrentProfileInfo: GetCurrentProfileInfo
 ) : AndroidViewModel(application) {
     var stateList: MutableLiveData<SingleLiveEvent<Flow<PagingData<Movie>>>> = MutableLiveData()
     var message: MutableLiveData<SingleLiveEvent<String>> = MutableLiveData()
@@ -34,7 +35,7 @@ class HomeViewModel @Inject constructor(
     val currentProfile = MutableLiveData<Profile>()
 
     private val currentProfileId by lazy {
-        MovieUtil.getProfileId(getApplication())
+        getCurrentProfileUid.run()
     }
 
     private val databaseRef by lazy {
@@ -46,12 +47,12 @@ class HomeViewModel @Inject constructor(
 
     init {
         getListMovies()
-        getCurrentProfileInfo {
+        getCurrentProfileInfo.run {
             currentProfile.value = it
         }
     }
 
-    fun saveToWatchList(movie: Movie) = getCurrentProfileInfo { profile ->
+    fun saveToWatchList(movie: Movie) = getCurrentProfileInfo.run { profile ->
         profile
             .watchList
             .any { it.id == movie.id }
@@ -82,17 +83,6 @@ class HomeViewModel @Inject constructor(
         } finally {
             delay(1000L)
             loading.postValue(false)
-        }
-    }
-
-    private fun getCurrentProfileInfo(onProfileReceived: (Profile) -> Unit) {
-        databaseRef.get().addOnSuccessListener { snapshot ->
-            snapshot
-                .children
-                .map { it.getValue(Profile::class.java) }
-                .findLast { it?.id == currentProfileId }
-                ?.let { onProfileReceived(it) }
-
         }
     }
 

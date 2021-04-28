@@ -8,28 +8,25 @@ import androidx.lifecycle.MutableLiveData
 import com.drawiin.yourfavoritemovies.R
 import com.drawiin.yourfavoritemovies.domain.models.Profile
 import com.drawiin.yourfavoritemovies.domain.models.User
-import com.drawiin.yourfavoritemovies.utils.MovieUtil
 import com.drawiin.yourfavoritemovies.ui.utils.architecture.SingleLiveEvent
 import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthenticationViewModel @Inject constructor(application: Application) :
-    AndroidViewModel(application) {
+class AuthenticationViewModel @Inject constructor(
+    application: Application,
+    private val auth: FirebaseAuth,
+    private val database: DatabaseReference
+) : AndroidViewModel(application) {
     val passwordLoading: MutableLiveData<Boolean> = MutableLiveData()
     val googleLoading: MutableLiveData<Boolean> = MutableLiveData()
     val facebookLoading: MutableLiveData<Boolean> = MutableLiveData()
@@ -37,9 +34,6 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
     val error: MutableLiveData<String> = MutableLiveData()
     val stateRegister: MutableLiveData<Boolean> = MutableLiveData()
     val stateLogin: MutableLiveData<SingleLiveEvent<Boolean>> = MutableLiveData()
-
-    private val auth: FirebaseAuth = Firebase.auth
-    private val database = Firebase.database.reference
 
     val googleSignInOptions: GoogleSignInOptions by lazy {
         GoogleSignInOptions.Builder(
@@ -109,7 +103,11 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
                 }
                 else -> {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    errorMessage()
+                    if (task.exception is FirebaseAuthUserCollisionException) {
+                        errorMessage("Já existe um usuário cadastrado com esse email")
+                    } else {
+                        errorMessage()
+                    }
                     hideAllLoadings()
                 }
             }
@@ -124,7 +122,11 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
         }
     }
 
-    private fun onEmailAuthComplete(task: Task<AuthResult>, name: String? = null, birth: String? = null) {
+    private fun onEmailAuthComplete(
+        task: Task<AuthResult>,
+        name: String? = null,
+        birth: String? = null
+    ) {
         when {
             task.isSuccessful -> auth.currentUser?.uid?.let {
                 onUserAuthenticate(it, name, birth)
@@ -135,8 +137,8 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
         }
     }
 
-    private fun errorMessage() {
-        error.value = "Houve um erro ao realizar login verifique as credencias"
+    private fun errorMessage(message: String = "Houve um erro ao realizar login verifique as credencias") {
+        error.value = message
     }
 
     private fun onUserAuthenticate(uid: String, name: String? = null, birth: String? = null) {
@@ -145,15 +147,15 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
             override fun onDataChange(snapshot: DataSnapshot) {
                 val user = snapshot.getValue(User::class.java)
                 if (user == null) {
-                    val key  = databaseRef.push().key
+                    val key = databaseRef.push().key
                     databaseRef.setValue(
                         User(
-                            name = auth.currentUser?.displayName ?: name ?:"Padrão",
+                            name = auth.currentUser?.displayName ?: name ?: "Padrão",
                             uid = uid,
                             profiles = listOf(
                                 Profile(
                                     id = key.toString(),
-                                    name = auth.currentUser?.displayName ?: name ?:"Padrão",
+                                    name = auth.currentUser?.displayName ?: name ?: "Padrão",
                                     watchList = emptyList(),
                                     watchedMovies = emptyList()
                                 )
@@ -163,7 +165,6 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
                         )
                     )
                 }
-                MovieUtil.saveProfileUid(getApplication(), uid)
                 hideAllLoadings()
                 onAuthSuccess()
             }
@@ -177,15 +178,13 @@ class AuthenticationViewModel @Inject constructor(application: Application) :
     }
 
     fun loadCurrentUser() {
-        Log.d("AUTH_VIEWMODEL", "onAuth sucess")
-        if (auth.currentUser != null){
-            MovieUtil.saveProfileUid(getApplication(), auth.currentUser?.uid)
+        if (auth.currentUser != null) {
             stateLogin.value = SingleLiveEvent(true)
         }
     }
 
     private fun onAuthSuccess() {
-        stateLogin.value =  SingleLiveEvent(true)
+        stateLogin.value = SingleLiveEvent(true)
         stateRegister.value = true
     }
 
