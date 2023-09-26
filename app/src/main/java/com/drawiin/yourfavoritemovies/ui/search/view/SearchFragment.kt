@@ -21,7 +21,6 @@ import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
 import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.math.ceil
@@ -85,7 +84,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showMessage(message: String) {
-        Snackbar.make(rv_movies, message, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.rvMovies, message, Snackbar.LENGTH_LONG).show()
     }
 
 

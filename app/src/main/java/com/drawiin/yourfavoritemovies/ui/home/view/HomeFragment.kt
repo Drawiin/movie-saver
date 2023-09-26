@@ -20,10 +20,7 @@ import com.drawiin.yourfavoritemovies.utils.getDeviceHeight
 import com.drawiin.yourfavoritemovies.utils.getDeviceWidth
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.math.ceil
@@ -157,7 +154,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showErrorMessage(message: String) {
-        Snackbar.make(rv_movies, message, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.rvMovies, message, Snackbar.LENGTH_LONG).show()
     }
 
     private fun exitProfile() {
