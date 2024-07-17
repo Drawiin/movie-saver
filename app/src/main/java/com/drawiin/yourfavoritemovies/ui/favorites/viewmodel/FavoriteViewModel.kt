@@ -34,12 +34,12 @@ class FavoriteViewModel @Inject constructor(
             .child("profiles")
     }
 
-    init {
+    fun init() {
         loading.value = true
         loadWatchList()
     }
 
-    private fun loadWatchList() {
+    fun loadWatchList() {
         getCurrentProfileInfo.run { profile ->
             stateList.value = profile.watchList
             loading.value = false

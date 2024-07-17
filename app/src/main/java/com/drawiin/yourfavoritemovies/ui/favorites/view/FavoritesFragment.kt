@@ -49,6 +49,7 @@ class FavoritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
         subscribeUi()
+        viewModel.init()
     }
 
     override fun onResume() {

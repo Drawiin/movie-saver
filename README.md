@@ -24,12 +24,16 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [Jetpack Navigation](https://developer.android.com/jetpack/androidx/releases/navigation)
 - [Material Design Components](https://material.io/components)
 - [Retrofit](https://square.github.io/retrofit/g)
-- [Data Binding](https://developer.android.com/topic/libraries/data-binding)
+- [ViewBinding](https://developer.android.com/topic/libraries/data-binding)
 - [Archtecture Components](https://developer.android.com/topic/libraries/architecture)
+- [Jetpack compose soon....](https://developer.android.com/jetpack/compose)
 
 ## 💻 Projeto
 
-Movies saver é uma app de filmes em que você pode ver o que há de popular e salvar nos seus favoritos, e acessar de onde quiser(pelo app claro).
+Movi saver é um app para apaixonado pro cinema, veja os filmes em cartaz, os mais populares e os mais bem avaliados, além de poder ver detalhes sobre o filme e salvar seus filmes favoritos.
+- [x] Listar filmes em cartaz
+- [x] Criar multiplas listas de filmes favoritos
+- [X] Tenha tudo salvo na nuvem com o Firebase
 
 ## :memo: Licença
 
