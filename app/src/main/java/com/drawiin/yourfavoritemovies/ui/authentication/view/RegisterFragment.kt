@@ -17,6 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.drawiin.yourfavoritemovies.R
+import com.drawiin.yourfavoritemovies.coreui.viewBinding
 import com.drawiin.yourfavoritemovies.databinding.FragmentRegisterBinding
 import com.drawiin.yourfavoritemovies.ui.authentication.viewmodel.AuthenticationViewModel
 import com.drawiin.yourfavoritemovies.ui.authentication.viewmodel.AuthenticationViewModel.Companion.TAG
@@ -40,7 +41,7 @@ import java.util.*
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
-    private lateinit var binding: FragmentRegisterBinding
+    private val binding by viewBinding(FragmentRegisterBinding::inflate)
 
     private val viewModel: AuthenticationViewModel by viewModels()
 
@@ -70,7 +71,6 @@ class RegisterFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
 

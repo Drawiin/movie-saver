@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
+import com.drawiin.yourfavoritemovies.coreui.viewBinding
 import com.drawiin.yourfavoritemovies.databinding.FragmentProfileBinding
 import com.drawiin.yourfavoritemovies.domain.models.Profile
 import com.drawiin.yourfavoritemovies.ui.adapter.ProfileAdapter
@@ -26,7 +27,7 @@ class ProfileFragment : Fragment() {
     private val viewModel: ProfileViewModel by viewModels()
     private val adapter = ProfileAdapter(::goToHome, ::deleteProfile)
 
-    private lateinit var binding: FragmentProfileBinding
+    private val binding by viewBinding(FragmentProfileBinding::inflate)
 
 
     override fun onCreateView(
@@ -34,7 +35,6 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
         setupUi()
         subscribeUi()
         return binding.root

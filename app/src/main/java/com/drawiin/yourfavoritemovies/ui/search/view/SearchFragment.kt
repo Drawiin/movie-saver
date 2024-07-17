@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
+import com.drawiin.yourfavoritemovies.coreui.viewBinding
 import com.drawiin.yourfavoritemovies.databinding.FragmentSearchBinding
 import com.drawiin.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
 import com.drawiin.yourfavoritemovies.domain.models.Movie
@@ -33,7 +34,7 @@ class SearchFragment : Fragment() {
         PagedMoviesAdapter(this::moveToWatchList)
     }
 
-    private lateinit var binding: FragmentSearchBinding
+    private val binding by viewBinding(FragmentSearchBinding::inflate)
 
 
     override fun onCreateView(
@@ -41,7 +42,6 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
         setupUi()
         subscribeUi()
         return binding.root

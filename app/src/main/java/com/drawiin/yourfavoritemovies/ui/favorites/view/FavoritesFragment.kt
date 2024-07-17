@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
+import com.drawiin.yourfavoritemovies.coreui.viewBinding
 import com.drawiin.yourfavoritemovies.databinding.FragmentFavoritesBinding
 import com.drawiin.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
 import com.drawiin.yourfavoritemovies.domain.models.Movie
@@ -34,14 +35,13 @@ class FavoritesFragment : Fragment() {
 
     private val viewModel: FavoriteViewModel by viewModels()
 
-    private lateinit var binding: FragmentFavoritesBinding
+    private val binding by viewBinding(FragmentFavoritesBinding::inflate)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         return binding.root
     }
 

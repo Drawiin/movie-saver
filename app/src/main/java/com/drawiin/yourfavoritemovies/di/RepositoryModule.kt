@@ -1,5 +1,6 @@
 package com.drawiin.yourfavoritemovies.di
 
+import com.drawiin.yourfavoritemovies.config.RemoteConfig
 import com.drawiin.yourfavoritemovies.data.cache.CacheService
 import com.drawiin.yourfavoritemovies.data.network.MoviesPagingSource
 import com.drawiin.yourfavoritemovies.data.network.MoviesService
@@ -22,9 +23,10 @@ object RepositoryModule {
     fun providesMovieRepository(
         pagingSource: MoviesPagingSource,
         @Named("language") language: String,
-        moviesService: MoviesService
+        moviesService: MoviesService,
+        remoteConfig: RemoteConfig
     ): MoviesRepository {
-        return DefaultMoviesRepository(pagingSource, language, moviesService)
+        return DefaultMoviesRepository(pagingSource, language, moviesService, remoteConfig)
     }
 
     @Singleton

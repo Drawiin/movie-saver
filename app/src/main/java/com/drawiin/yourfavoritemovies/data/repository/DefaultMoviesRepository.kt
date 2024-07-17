@@ -3,6 +3,7 @@ package com.drawiin.yourfavoritemovies.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.drawiin.yourfavoritemovies.config.RemoteConfig
 import com.drawiin.yourfavoritemovies.data.network.MoviesPagingSource
 import com.drawiin.yourfavoritemovies.data.network.MoviesSearchPagingSource
 import com.drawiin.yourfavoritemovies.data.network.MoviesService
@@ -16,7 +17,8 @@ class DefaultMoviesRepository @Inject constructor(
     private val pagingSource: MoviesPagingSource,
     @Named("language")
     private val language: String,
-    private val moviesService: MoviesService
+    private val moviesService: MoviesService,
+    private val remoteConfig: RemoteConfig
 ) : MoviesRepository {
     override fun getMoviesPlayingNow(): Flow<PagingData<Movie>> {
         return Pager(
@@ -34,7 +36,7 @@ class DefaultMoviesRepository @Inject constructor(
                 pageSize = NETWORK_PAGE_SIZE,
                 enablePlaceholders = true
             ),
-            pagingSourceFactory = { MoviesSearchPagingSource(query, language, moviesService) }
+            pagingSourceFactory = { MoviesSearchPagingSource(query, language, moviesService, remoteConfig) }
         ).flow
     }
 

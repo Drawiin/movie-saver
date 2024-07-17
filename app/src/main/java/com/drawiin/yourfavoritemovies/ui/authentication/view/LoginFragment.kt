@@ -17,6 +17,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.drawiin.yourfavoritemovies.R
+import com.drawiin.yourfavoritemovies.coreui.viewBinding
 import com.drawiin.yourfavoritemovies.databinding.FragmentLoginBinding
 import com.drawiin.yourfavoritemovies.ui.authentication.viewmodel.AuthenticationViewModel
 import com.drawiin.yourfavoritemovies.ui.authentication.viewmodel.AuthenticationViewModel.Companion.TAG
@@ -37,7 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
-    private lateinit var binding: FragmentLoginBinding
+    private val binding by viewBinding(FragmentLoginBinding::inflate)
 
 
     private val viewModel: AuthenticationViewModel by viewModels()
@@ -61,7 +62,6 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 

@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drawiin.yourfavoritemovies.R
+import com.drawiin.yourfavoritemovies.coreui.viewBinding
 import com.drawiin.yourfavoritemovies.databinding.FragmentHomeBinding
 import com.drawiin.yourfavoritemovies.databinding.MovieSkeletonLayoutBinding
 import com.drawiin.yourfavoritemovies.domain.models.Movie
@@ -28,7 +29,6 @@ import kotlin.math.ceil
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-    private var isAppBarExpanded = true
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
         PagedMoviesAdapter(this::moveToWatchList)
     }
 
-    private lateinit var binding: FragmentHomeBinding
+    private val binding by viewBinding(FragmentHomeBinding::inflate)
 
 
     override fun onCreateView(
@@ -44,7 +44,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -61,10 +60,6 @@ class HomeFragment : Fragment() {
             layoutManager = GridLayoutManager(activity, GRID_SPAN_COUNT)
         }
         toolbar.setOnMenuItemClickListener { onMenuItemClicked(it) }
-
-        appbar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset: Int ->
-            isAppBarExpanded = verticalOffset == 0
-        })
     }
 
     private fun onMenuItemClicked(menuItem: MenuItem) = when (menuItem.itemId) {
